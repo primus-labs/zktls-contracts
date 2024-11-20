@@ -1,0 +1,27 @@
+{
+  "name": "@primuslabs/zktls-contracts",
+  "version": "0.1.0",
+  "description": "Primus zkTLS contracts",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "node": "npx hardhat node",
+    "deploy:zkTLS": "npx hardhat run --network arbitrumone scripts/deploy-zkTLS.js",
+    "upgrade:zkTLS": "npx hardhat run --network bsctestnet scripts/upgrade-zkTLS.js",
+    "update:zkTLS": "npx hardhat run --network bsctestnet scripts/modify-zkTLS.js",
+    "clean": "npx hardhat clean"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@openzeppelin/hardhat-upgrades": "^2.3.1",
+    "hardhat": "^2.16.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.1.0",
+    "@openzeppelin/contracts-upgradeable": "^5.1.0",
+    "dotenv": "^16.3.1"
+  }
+}
