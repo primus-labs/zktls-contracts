@@ -10,8 +10,9 @@ struct Attestation {
     AttNetworkRequest request; // The network request send to jsk and related to the attestation.
     AttNetworkResponseResolve[] reponse; // The response details responsed from jdk.
     string data; // Real data in the pending body provided in JSON string format.
-    string attParameters; // Attestation parameters in JSON string format.
+    string attConditions; // Attestation parameters in JSON string format.
     uint64 timestamp; // The timestamp of when the attestation was created.
+    string attitionParams; // Attestation parameters in JSON string format.
     // Attestor[] attestors; // List of attestors who signed the attestation.
     bytes[] signature; // signature from the attestor.
 }

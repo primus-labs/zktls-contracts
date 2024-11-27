@@ -103,7 +103,7 @@ contract PrimusZkTLS is OwnableUpgradeable, IPrimusZkTLS {
             v := byte(0, mload(add(signature, 0x60)))
         }
         require(v == 27 || v == 28, "Invalid signature v value");
-        address attestorAddr = ecrecover(attestationEncode(attestation), v, r, s);
+        address attestorAddr = ecrecover(encodeAttestation(attestation), v, r, s);
         for (uint256 i = 0; i < _attestors.length; i++) {
             address currentAddr = _attestors[i].attestorAddr;
             if (attestorAddr == currentAddr) {
@@ -123,7 +123,7 @@ contract PrimusZkTLS is OwnableUpgradeable, IPrimusZkTLS {
      * @param attestation The attestation data to encode.
      * @return A bytes32 hash of the encoded attestation.
      */
-    function attestationEncode(
+    function encodeAttestation(
         Attestation calldata attestation
     ) public pure returns (bytes32) {
         bytes memory encodeData = abi.encodePacked(
@@ -131,8 +131,9 @@ contract PrimusZkTLS is OwnableUpgradeable, IPrimusZkTLS {
             encodeRequest(attestation.request),
             encodeResponse(attestation.reponse),
             attestation.data,
-            attestation.attParameters,
-            attestation.timestamp
+            attestation.attConditions,
+            attestation.timestamp,
+            attestation.attitionParams
         );
         return keccak256(encodeData);
     }

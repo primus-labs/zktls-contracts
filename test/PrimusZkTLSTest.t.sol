@@ -159,14 +159,15 @@ contract PrimusZkTLSTest is Test {
             request: request,
             reponse: response,
             data: bodyString,
-            attParameters: '{"param":"value"}',
-            timestamp: uint64(block.timestamp),        
+            attConditions: '{"param":"value"}',
+            timestamp: uint64(block.timestamp), 
+            attitionParams: '{"param":"value"}',
             signature: new bytes[] (1)
         });
 
         //get Gas used for AttestationEncode
         uint256 gasStart = gasleft();
-        zkTLS.attestationEncode(attestation);
+        zkTLS.encodeAttestation(attestation);
         uint256 gasUsed = gasStart - gasleft();
 
         emit log_named_uint("Gas Used for", gasUsed);
@@ -191,14 +192,15 @@ contract PrimusZkTLSTest is Test {
             request: request,
             reponse: response,
             data: bodyString,
-            attParameters: '{"param":"value"}',
-            timestamp: uint64(block.timestamp),        
+            attConditions: '{"param":"value"}',
+            timestamp: uint64(block.timestamp), 
+            attitionParams: '{"param":"value"}',       
             signature: new bytes[] (1)
         });
 
         console.log("recipient----address:%s",addressToString(attestation.recipient));
-
-        bytes32 digest = zkTLS.attestationEncode(attestation);
+        
+        bytes32 digest = zkTLS.encodeAttestation(attestation);
         
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(_signerPrivateKey, digest);
         console.log("r:%d s:%d v:%d",uint256(r),uint256(s),v);
