@@ -12,7 +12,7 @@ struct Attestation {
     string data; // Real data in the pending body provided in JSON string format.
     string attConditions; // Attestation parameters in JSON string format.
     uint64 timestamp; // The timestamp of when the attestation was created.
-    string attitionParams; // Attestation parameters in JSON string format.
+    string attitionParams; // Extra data for more inormation.
     // Attestor[] attestors; // List of attestors who signed the attestation.
     bytes[] signature; // signature from the attestor.
 }
