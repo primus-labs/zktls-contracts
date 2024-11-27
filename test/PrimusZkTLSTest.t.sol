@@ -13,23 +13,34 @@ contract PrimusZkTLSTest is Test {
     using Strings for uint256;
     using Strings for address;
 
+    address private owner = address(0x123);
+    address private addr1 = address(0x456);
+    address private addr2 = address(0x789);
+
+    string constant urlString = "https://example.com/apiwdewd/121s1qs1qs?DDDSADWDDAWDWAWWAWW"; 
+    string constant headerString = '{"Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwi.M0NTY3ODM0NTY3ODM0NTY3ODM0NTY3ODM0NTY3OD..","X-Custom-Header-1":""Very-Long-Custom-Header-Value-That-Exceeds-Normal-Limits-Here-1234567890l-Limits-Here-1234567l-Limits-Here-1234567l-Limits-Here-1234567l-Limits-Here-1234567l-Limits-Here-1234567...","X-Custom-Header-2":"Another-Custom-Value-1234567890abcdefghijklmnopqrstuvwxyzghijklmnopqrstuvwxyghijklmnopqrstuvwxyghijklmnopqrstuvwxyghijklmnopqrstuvwxy", "Content-Type": "application/json","Accept": "application/json","User-Agent": "MyCustomClient/1.0","Cache-Control": "no-cache"}';
+    string constant bodyString = '{"metadata":{"timestamp": "2024-11-26T12:34:56Z","requestId": "123e4567-e89b-12d3-a456-426614174000","tags": ["large_request","test_data","example_usage"]},"data":{"items": [{"id": 1,"name": "Item One","description": "This is a detailed description of item one.","attributes": {"color": "red","size": "large","weight": 1.234}},{"id": 2,"name": "Item Two","description": "This is a detailed description of item two.","attributes": {"color": "blue","size": "medium","weight": 2.345}}],"extraData": {"subField1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.","subField2": ["Value1","Value2","Value3","Value4"],"nestedField": {"innerField1": "Deeply nested value","innerField2": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}}}}';
+
+    Attestor private attestor1 = Attestor({attestorAddr: addr1, url: "Attestor 1"});
+    Attestor private attestor2 = Attestor({attestorAddr: addr2, url: "Attestor 2"});
     function setUp() public {
-        // 部署合约
+        //deploy contract
+        vm.prank(owner); // Set `owner` as the deployer
         zkTLS = new PrimusZkTLS();
         _signerPrivateKey = 0xA11CE;
         _signer = vm.addr(_signerPrivateKey);
+        zkTLS.initialize(owner);
     }
 
     function addressToString(address addr) public pure returns (string memory) {
-        return Strings.toHexString(uint160(addr), 20); // 20 是地址字节长度
+        return Strings.toHexString(uint160(addr), 20); 
     }
 
     function createSampleAttestation() internal view returns(Attestor[] memory){
         Attestor[] memory attes = new Attestor[] (1);
-        string memory addr = addressToString(_signer);
         for (uint256 i = 0; i < 1; i++) {
             attes[i] = Attestor({
-                    attestorAddr: addr,
+                    attestorAddr: _signer,
                     url: "https://attestor1.com/profile"
             });
         }
@@ -40,25 +51,75 @@ contract PrimusZkTLSTest is Test {
         AttNetworkResponseResolve[] memory response = new AttNetworkResponseResolve[] (3);
         for (uint256 i = 0; i < 3; i++) {
             response[i] = AttNetworkResponseResolve({
-                    keyName: "key1",
-                    parseType: "JSON",
-                    parsePath: "$.data.key1"
+                    keyName: "dASCZCSQFEQSDCKMASODCNPOND[OJDL;AKNC;KA;LCZMOQNOQWNPWNEO2NEPIOWNEO2EQWDNLKJQBDIQNWIUNINOIEDN2ONEDOI2NEDO2ISDKSMD]ND LWHBLQBEDKJEBDIUWSILSBCLQVSCUYDUH@3344OIIOQWEJ02J0J3ajdhpohodh92njabdpuhcqnwejkbiuhc0[qwncjqnsdonqowfoqwno;9 ujdwkfpokwedm1jf[oi]wc9hce98cbuie9gd71gd87d817g219ge97129g19g2812912]",
+                    parseType: "JSON121231uqwhdp9uh2i1ubdbjabdiwd1biu212",
+                    parsePath: "$.data.key1kn;ni[onwendiohed2ij20djasdj09wndoiqweoqheqhefpqhf9p92hf238dhdohwuhpbfoqufp92hfo2iefinoiedn2o9302]"
             });
         }    
         
         return response;
     }
 
+     function test_SetAttestor() public {
+        vm.startPrank(owner); // Set the caller as the owner
+        // Set an attestor for addr1
+        zkTLS.setAttestor(attestor1);
+
+        // Verify the attestor was set
+        (address storedAttestorAddr, string memory storedMetadata) = zkTLS._attestorsMapping(addr1);
+        assertEq(storedAttestorAddr, attestor1.attestorAddr, "Attestor address mismatch");
+        assertEq(storedMetadata, attestor1.url, "Attestor metadata mismatch");
+
+        // Set a new attestor for addr2
+        zkTLS.setAttestor(attestor2);
+        vm.stopPrank();
+        (address storedAttestorAddr2, string memory storedMetadata2) = zkTLS._attestorsMapping(addr2);
+        assertEq(storedAttestorAddr2, attestor2.attestorAddr, "Attestor address mismatch for addr2");
+        assertEq(storedMetadata2, attestor2.url, "Attestor metadata mismatch for addr2");
+    }
+
+    function test_RemoveAttestor() public {
+        vm.startPrank(owner); // Set the caller as the owner
+
+        // Set an attestor for addr1
+        zkTLS.setAttestor(attestor1);
+
+        // Remove the attestor for addr1
+        zkTLS.removeAttestor(addr1);
+        vm.stopPrank();
+        // Verify the attestor was removed
+        (address storedAttestorAddr, string memory storedMetadata) = zkTLS._attestorsMapping(addr1);
+        assertEq(storedAttestorAddr, address(0), "Attestor address was not removed");
+        assertEq(bytes(storedMetadata).length, 0, "Attestor metadata was not removed");
+    }
+
+    function test_SetAttestorNotOwner() public {
+        vm.prank(addr1); // Set a non-owner as the caller
+
+        // Expect the transaction to revert
+        vm.expectRevert("Ownable: caller is not the owner");
+        zkTLS.setAttestor(attestor1);
+    }
+
+    function test_RemoveAttestorNotOwner() public {
+        vm.prank(addr1); // Set a non-owner as the caller
+
+        // Expect the transaction to revert
+        vm.expectRevert("Ownable: caller is not the owner");
+        zkTLS.removeAttestor(addr1);
+    }
+
+
     function test_EncodeRequest() public {
-        // 构造请求数据
+        //constractor AttNetworkRequest data
         AttNetworkRequest memory request = AttNetworkRequest({
-            url: "https://example.com/api",
-            header: '{"Authorization":"Bearer token"}',
+            url: urlString,
+            header: headerString,
             method: "POST",
-            body: '{"key":"value"}'
+            body: bodyString
         });
 
-        // 测量 Gas 消耗
+        // get Gas used for encodeRequest
         uint256 gasStart = gasleft();
         zkTLS.encodeRequest(request);
         uint256 gasUsed = gasStart - gasleft();
@@ -66,30 +127,11 @@ contract PrimusZkTLSTest is Test {
         emit log_named_uint("Gas Used for encodeRequest", gasUsed);
     }
 
-    function test_EncodeRequest1() public {
-          // 构造请求数据
-        AttNetworkRequest memory request = AttNetworkRequest({
-            url: "https://example.com/api",
-            header: '{"Authorization":"Bearer token"}',
-            method: "POST",
-            body: '{"key":"value"}'
-        });
-
-        // 测量 Gas 消耗
-        uint256 gasStart = gasleft();
-        zkTLS.encodeRequest1(request);
-        uint256 gasUsed = gasStart - gasleft();
-
-        emit log_named_uint("Gas Used for encodeRequest packedencode", gasUsed);
-    }
-
-
     function test_EncodeResponse() public {
-        // To modify, use a storage array
         console.log("---test_EncodeResponse----");
         AttNetworkResponseResolve[] memory response = createSampleResponses();
         console.log("response length %d",response.length);
-        // 测量 Gas 消耗
+        // get Gas used for EncodeResponse
         uint256 gasStart = gasleft();
         zkTLS.encodeResponse(response);
         uint256 gasUsed = gasStart - gasleft();
@@ -97,42 +139,32 @@ contract PrimusZkTLSTest is Test {
         emit log_named_uint("Gas Used for encodeResponse", gasUsed);
     }
 
-    function test_EncodeResponse1() public {
-        // 构造响应数据
-        AttNetworkResponseResolve[] memory response = createSampleResponses();
-        console.log("response length %d",response.length);
-        // 测量 Gas 消耗
-        uint256 gasStart = gasleft();
-        zkTLS.encodeResponse1(response);
-        uint256 gasUsed = gasStart - gasleft();
-
-        emit log_named_uint("Gas Used for encodeResponse packedencode", gasUsed);
-    }
-
-
     function test_AttestationEncode() public {
-        // 构造测试数据
+        vm.prank(owner); // Set the caller as the owner
+
+        // Set an attestor for addr1
+        zkTLS.setAttestor(attestor1);
+        //constractor AttNetworkRequest data
         AttNetworkRequest memory request = AttNetworkRequest({
-            url: "https://example.com/api",
-            header: '{"Authorization":"Bearer token"}',
+            url: urlString,
+            header: headerString,
             method: "GET",
-            body: '{"key":"value"}'
+            body: bodyString
         });
 
         AttNetworkResponseResolve[] memory response = createSampleResponses();
-        Attestor[] memory attes = createSampleAttestation();
+       
         Attestation memory attestation = Attestation({
             recipient: address(this),
             request: request,
             reponse: response,
-            data: '{"key":"value"}',
+            data: bodyString,
             attParameters: '{"param":"value"}',
-            timestamp: uint64(block.timestamp),
-            attestors: attes,         
-            signature: new bytes(0)
+            timestamp: uint64(block.timestamp),        
+            signature: new bytes[] (1)
         });
 
-        // 测量 Gas 消耗
+        //get Gas used for AttestationEncode
         uint256 gasStart = gasleft();
         zkTLS.attestationEncode(attestation);
         uint256 gasUsed = gasStart - gasleft();
@@ -140,63 +172,28 @@ contract PrimusZkTLSTest is Test {
         emit log_named_uint("Gas Used for", gasUsed);
     }
 
-    
-     function test_AttestationEncode1() public {
-        // 构造测试数据
-        AttNetworkRequest memory request = AttNetworkRequest({
-            url: "https://example.com/api",
-            header: '{"Authorization":"Bearer token"}',
-            method: "GET",
-            body: '{"key":"value"}'
-        });
 
-        AttNetworkResponseResolve[] memory response = createSampleResponses();
-        console.log("response leng",response.length);
-        Attestor[] memory attes = createSampleAttestation();
-        console.log("attes leng",attes.length);
-
-        Attestation memory attestation = Attestation({
-            recipient: address(this),
-            request: request,
-            reponse: response,
-            data: '{"key":"value"}',
-            attParameters: '{"param":"value"}',
-            timestamp: uint64(block.timestamp),
-            attestors: attes,
-            signature: new bytes(0)
-        });
-
-        // 测量 Gas 消耗
-        uint256 gasStart = gasleft();
-        zkTLS.attestationEncode1(attestation);
-        uint256 gasUsed = gasStart - gasleft();
-
-        emit log_named_uint("Gas Used for attestationEncode packedencode", gasUsed);
-    }
-
-
-    function test_VerifierSignature() public view {
+    function test_VerifierSignature() public  {
+        vm.prank(owner); // Set the caller as the owner
         
+        zkTLS.setAttestor(Attestor({attestorAddr: _signer, url: "Attestor attestorSign"}));
         AttNetworkRequest memory request = AttNetworkRequest({
-            url: "https://example.com/api",
-            header: '{"Authorization":"Bearer token"}',
+            url: urlString,
+            header: headerString,
             method: "GET",
-            body: '{"key":"value"}'
+            body: bodyString
         });
         address bob = address(0x122222111111);
         AttNetworkResponseResolve[] memory response = createSampleResponses();
-        Attestor[] memory attes = createSampleAttestation();
-        console.log("attestorAddr:%s",attes[0].attestorAddr);
        
         Attestation memory attestation = Attestation({
             recipient: bob,
             request: request,
             reponse: response,
-            data: '{"key":"value"}',
+            data: bodyString,
             attParameters: '{"param":"value"}',
-            timestamp: uint64(block.timestamp),
-            attestors: attes,         
-            signature: new bytes(0)
+            timestamp: uint64(block.timestamp),        
+            signature: new bytes[] (1)
         });
 
         console.log("recipient----address:%s",addressToString(attestation.recipient));
@@ -210,10 +207,14 @@ contract PrimusZkTLSTest is Test {
         console.log("signature----%s",bytesToHexString(signature));
 
 
+        attestation.signature[0] = signature;
 
-        attestation.signature = signature;
+        uint256 gasStart = gasleft();
         assertEq(zkTLS.verifyAttestation(attestation), true);
+        uint256 gasUsed = gasStart - gasleft();
 
+        emit log_named_uint("verifyAttestationWithSingleSignature Gas Used for", gasUsed);
+       
     }
     
     function parseAddr(string memory addrStr) internal pure returns (address) {

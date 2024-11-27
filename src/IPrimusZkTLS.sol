@@ -12,8 +12,8 @@ struct Attestation {
     string data; // Real data in the pending body provided in JSON string format.
     string attParameters; // Attestation parameters in JSON string format.
     uint64 timestamp; // The timestamp of when the attestation was created.
-    Attestor[] attestors; // List of attestors who signed the attestation.
-    bytes signature; // signature from the attestor.
+    // Attestor[] attestors; // List of attestors who signed the attestation.
+    bytes[] signature; // signature from the attestor.
 }
 
 /**
@@ -39,7 +39,7 @@ struct AttNetworkResponseResolve {
  * @dev Structure representing an attestor, who is responsible for signing the attestation.
  */
 struct Attestor {
-    string attestorAddr; // The address of the attestor in string format.
+    address attestorAddr; // The address of the attestor.
     string url; // URL associated with the attestor, such as a profile or additional information.
 }
 
@@ -47,33 +47,7 @@ struct Attestor {
  * @dev Interface of PrimusZkTLS, which defines functions for handling attestations and related operations.
  */
 interface IPrimusZkTLS {
-    /**
-     * @dev Encodes an attestation into a bytes32 hash for verification or storage.
-     * @param attestation The attestation data to be encoded.
-     * @return The hash of the encoded attestation.
-     */
-    function attestationEncode(Attestation calldata attestation) external pure returns (bytes32);
-
-    function attestationEncode1(Attestation calldata attestation) external pure returns (bytes32);
-
-    /**
-     * @dev Encodes a network request into a bytes32 hash for verification or storage.
-     * @param request The network request data to be encoded.
-     * @return The hash of the encoded network request.
-     */
-    function encodeRequest(AttNetworkRequest calldata request) external pure returns (bytes32);
-
-    function encodeRequest1(AttNetworkRequest calldata request) external pure returns (bytes32);
-
-    /**
-     * @dev Encodes a list of response resolutions into a bytes32 hash for verification or storage.
-     * @param reponse The array of response resolution data to be encoded.
-     * @return The hash of the encoded response resolutions.
-     */
-    function encodeResponse(AttNetworkResponseResolve[] calldata reponse) external pure returns (bytes32);
-
-    function encodeResponse1(AttNetworkResponseResolve[] calldata reponse) external pure returns (bytes32);
-
+  
     /**
      *  @dev Verifies the validity of a given attestation. 
      * This includes checking the signature of attestor, 
@@ -89,5 +63,6 @@ interface IPrimusZkTLS {
      *
      * Emits no events.
      */
-    function verifyAttestation(Attestation calldata attestation) external pure returns (bool);
+    function verifyAttestation(Attestation calldata attestation) external view returns (bool);
+
 }
