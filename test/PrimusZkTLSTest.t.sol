@@ -235,12 +235,12 @@ contract PrimusZkTLSTest is Test {
 
     function bytesToHexString(bytes memory data) public pure returns (string memory) {
         bytes memory hexChars = "0123456789abcdef";
-        bytes memory hexString = new bytes(data.length * 2); // 每字节占两字符
+        bytes memory hexString = new bytes(data.length * 2); 
 
         for (uint256 i = 0; i < data.length; i++) {
             uint8 currentByte = uint8(data[i]);
-            hexString[2 * i] = hexChars[currentByte >> 4]; // 高4位
-            hexString[2 * i + 1] = hexChars[currentByte & 0x0f]; // 低4位
+            hexString[2 * i] = hexChars[currentByte >> 4]; 
+            hexString[2 * i + 1] = hexChars[currentByte & 0x0f]; 
         }
 
         return string(hexString);
