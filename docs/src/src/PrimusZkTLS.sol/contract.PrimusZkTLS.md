@@ -1,5 +1,5 @@
 # PrimusZkTLS
-[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/39da5d93e5284e511f38cef54cdf2b68d70d73c9/src/PrimusZkTLS.sol)
+[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/22782d123c4a94bbb8308ff89b2388f9394ba26e/src/PrimusZkTLS.sol)
 
 **Inherits:**
 OwnableUpgradeable, [IPrimusZkTLS](/src/IPrimusZkTLS.sol/interface.IPrimusZkTLS.md)
