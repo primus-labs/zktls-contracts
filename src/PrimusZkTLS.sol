@@ -35,6 +35,16 @@ contract PrimusZkTLS is OwnableUpgradeable, IPrimusZkTLS {
         setupDefaultAttestor(_owner);
     }
 
+
+    /**
+	 * @notice Override of UUPSUpgradeable virtual function
+	 *
+	 * @dev Function that should revert when `msg.sender` is not authorized to upgrade the contract. Called by
+	 * {upgradeTo} and {upgradeToAndCall}.
+	 */
+	function _authorizeUpgrade(address) internal view override onlyOwner {}
+
+
     function setupDefaultAttestor(address defaultAddr) internal {
         require(defaultAddr != address(0), "Invalid address");
         _attestorsMapping[defaultAddr] = Attestor({
