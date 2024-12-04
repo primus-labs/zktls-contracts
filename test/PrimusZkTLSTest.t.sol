@@ -162,6 +162,7 @@ contract PrimusZkTLSTest is Test {
             attConditions: '{"param":"value"}',
             timestamp: uint64(block.timestamp), 
             attitionParams: '{"param":"value"}',
+            attestors: new Attestor[] (1), // List of attestors who signed the attestation.
             signature: new bytes[] (1)
         });
 
@@ -194,7 +195,8 @@ contract PrimusZkTLSTest is Test {
             data: bodyString,
             attConditions: '{"param":"value"}',
             timestamp: uint64(block.timestamp), 
-            attitionParams: '{"param":"value"}',       
+            attitionParams: '{"param":"value"}', 
+            attestors: new Attestor[] (1),      
             signature: new bytes[] (1)
         });
 

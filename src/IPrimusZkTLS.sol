@@ -13,7 +13,7 @@ struct Attestation {
     string attConditions; // Attestation parameters in JSON string format.
     uint64 timestamp; // The timestamp of when the attestation was created.
     string attitionParams; // Extra data for more inormation.
-    // Attestor[] attestors; // List of attestors who signed the attestation.
+    Attestor[] attestors; // List of attestors who signed the attestation.
     bytes[] signature; // signature from the attestor.
 }
 
@@ -43,6 +43,7 @@ struct Attestor {
     address attestorAddr; // The address of the attestor.
     string url; // URL associated with the attestor, such as a profile or additional information.
 }
+
 
 /**
  * @dev Interface of PrimusZkTLS, which defines functions for handling attestations and related operations.
