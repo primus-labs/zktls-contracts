@@ -12,3 +12,5 @@ artifacts
 .openzeppelin
 
 .env
+
+out

@@ -1,0 +1,29 @@
+{
+    "name": "@primuslabs/zktls-contracts",
+    "version": "0.1.0",
+    "description": "Primus zkTLS contracts",
+    "main": "index.js",
+    "files": [
+        "./src"
+    ],    
+    "scripts": {
+      "compile": "forge build",
+      "deploy:zkTLS": "forge script script/PrimusZkTLS.s.sol --rpc-url holesky",
+      "upgrade:zkTLS": "forge script script/UpgradeZkTLS.s.sol --rpc-url holesky",
+      "clean": "forge clean",
+      "publish": "npm publish --access public"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+      "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+      "@openzeppelin/hardhat-upgrades": "^2.3.1",
+      "hardhat": "^2.16.1"
+    },
+    "dependencies": {
+      "@openzeppelin/contracts": "^5.1.0",
+      "@openzeppelin/contracts-upgradeable": "^5.1.0",
+      "dotenv": "^16.3.1"
+    }
+  }
