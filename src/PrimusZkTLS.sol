@@ -35,16 +35,6 @@ contract PrimusZkTLS is OwnableUpgradeable, IPrimusZkTLS {
         setupDefaultAttestor(_owner);
     }
 
-
-    /**
-	 * @notice Override of UUPSUpgradeable virtual function
-	 *
-	 * @dev Function that should revert when `msg.sender` is not authorized to upgrade the contract. Called by
-	 * {upgradeTo} and {upgradeToAndCall}.
-	 */
-	function _authorizeUpgrade(address) internal view override onlyOwner {}
-
-
     function setupDefaultAttestor(address defaultAddr) internal {
         require(defaultAddr != address(0), "Invalid address");
         _attestorsMapping[defaultAddr] = Attestor({
@@ -113,7 +103,7 @@ contract PrimusZkTLS is OwnableUpgradeable, IPrimusZkTLS {
      *
      * @param attestation The attestation data to be verified.
      */
-    function verifyAttestation(Attestation calldata attestation) external view returns (bool) {
+    function verifyAttestation(Attestation calldata attestation) external view {
         require(attestation.signature.length == 1, "Invalid signature length");
         bytes memory signature = attestation.signature[0];
         require(signature.length == 65,"Invalid signature length");
@@ -127,13 +117,14 @@ contract PrimusZkTLS is OwnableUpgradeable, IPrimusZkTLS {
         }
         require(v == 27 || v == 28, "Invalid signature v value");
         address attestorAddr = ecrecover(encodeAttestation(attestation), v, r, s);
-        for (uint256 i = 0; i < _attestors.length; i++) {
+        uint256 i;
+        for (i = 0; i < _attestors.length; i++) {
             address currentAddr = _attestors[i].attestorAddr;
             if (attestorAddr == currentAddr) {
-                return true;
+                break;
             }
         }
-        return false;
+        require(i < _attestors.length, "Invalid signature");
     }
 
 

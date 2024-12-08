@@ -214,7 +214,7 @@ contract PrimusZkTLSTest is Test {
         attestation.signature[0] = signature;
 
         uint256 gasStart = gasleft();
-        assertEq(zkTLS.verifyAttestation(attestation), true);
+        zkTLS.verifyAttestation(attestation);
         uint256 gasUsed = gasStart - gasleft();
 
         emit log_named_uint("verifyAttestationWithSingleSignature Gas Used for", gasUsed);
