@@ -65,6 +65,6 @@ interface IPrimusZkTLS {
      *
      * Emits no events.
      */
-    function verifyAttestation(Attestation calldata attestation) external view returns (bool);
+    function verifyAttestation(Attestation calldata attestation) external view;
 
 }
