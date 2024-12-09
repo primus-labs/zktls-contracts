@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.25;
+pragma solidity ^0.8.20;
 
 /**
  * @dev Structure representing an attestation, which is a signed statement of fact.
