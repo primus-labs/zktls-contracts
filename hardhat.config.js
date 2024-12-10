@@ -8,7 +8,7 @@ module.exports = {
   {
     compilers: [
       {
-        version: "0.8.25",
+        version: "0.8.20",
       }
     ]
   },
