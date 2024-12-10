@@ -5,14 +5,7 @@ pragma solidity ^0.8.20;
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {IPrimusZKTLS, Attestation, AttNetworkRequest, AttNetworkResponseResolve, Attestor} from "./IPrimusZKTLS.sol";
 
-// Defines an event triggered when a new attestor is added
-// @param _address The address of the attestor
-// @param _attestor Detailed information about the attestor (could be a struct or contract type)
-event AddAttestor(address _address, Attestor _attestor);
 
-// Defines an event triggered when an existing attestor is removed
-// @param _address The address of the attestor
-event DelAttestor(address _address);
 
 /**
  * @dev Implementation of the {IPrimusZKTLS} interface, providing 
@@ -25,7 +18,15 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
     // Mapping to store attestors for each address
     mapping(address => Attestor) public _attestorsMapping;
     Attestor[] public _attestors;
+    // Defines an event triggered when a new attestor is added
+    // @param _address The address of the attestor
+    // @param _attestor Detailed information about the attestor (could be a struct or contract type)
+    event AddAttestor(address _address, Attestor _attestor);
 
+    // Defines an event triggered when an existing attestor is removed
+    // @param _address The address of the attestor
+    event DelAttestor(address _address);
+    
      /**
      * @dev initialize function to set the owner of the contract.
      * This function is called during the contract deployment.
