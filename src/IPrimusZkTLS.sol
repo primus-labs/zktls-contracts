@@ -46,9 +46,9 @@ struct Attestor {
 
 
 /**
- * @dev Interface of PrimusZkTLS, which defines functions for handling attestations and related operations.
+ * @dev Interface of PrimusZKTLS, which defines functions for handling attestations and related operations.
  */
-interface IPrimusZkTLS {
+interface IPrimusZKTLS {
   
     /**
      *  @dev Verifies the validity of a given attestation. 

@@ -4,9 +4,9 @@ pragma solidity ^0.8.25;
 import "forge-std/Script.sol";
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
-import "../src/PrimusZkTLS.sol";
+import "../src/PrimusZKTLS.sol";
 
-contract DeployPrimusZkTLS is Script {
+contract DeployPrimusZKTLS is Script {
     function run() external {
         // 1. Get private key
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
@@ -14,14 +14,14 @@ contract DeployPrimusZkTLS is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         // 2. Deploy logic contract (implementation)
-        PrimusZkTLS logic = new PrimusZkTLS();
+        PrimusZKTLS logic = new PrimusZKTLS();
 
         // 3. Deploy ProxyAdmin
         ProxyAdmin proxyAdmin = new ProxyAdmin(deployerAddress);
 
         // 4. Prepare initialization data
         bytes memory initializeData = abi.encodeWithSelector(
-            PrimusZkTLS.initialize.selector,
+            PrimusZKTLS.initialize.selector,
             deployerAddress // Replace with the actual owner address if needed
         );
 

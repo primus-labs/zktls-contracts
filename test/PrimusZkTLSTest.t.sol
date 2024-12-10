@@ -2,12 +2,12 @@
 pragma solidity ^0.8.25;
 
 import {Test, console} from "forge-std/Test.sol";
-import "../src/PrimusZkTLS.sol";
-import "../src/IPrimusZkTLS.sol";
+import "../src/PrimusZKTLS.sol";
+import "../src/IPrimusZKTLS.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract PrimusZkTLSTest is Test {
-    PrimusZkTLS private zkTLS;
+contract PrimusZKTLSTest is Test {
+    PrimusZKTLS private zkTLS;
     uint256 internal _signerPrivateKey;
     address internal _signer;
     using Strings for uint256;
@@ -26,7 +26,7 @@ contract PrimusZkTLSTest is Test {
     function setUp() public {
         //deploy contract
         vm.prank(owner); // Set `owner` as the deployer
-        zkTLS = new PrimusZkTLS();
+        zkTLS = new PrimusZKTLS();
         _signerPrivateKey = 0xA11CE;
         _signer = vm.addr(_signerPrivateKey);
         zkTLS.initialize(owner);

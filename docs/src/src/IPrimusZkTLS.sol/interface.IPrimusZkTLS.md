@@ -1,7 +1,7 @@
-# IPrimusZkTLS
-[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/22782d123c4a94bbb8308ff89b2388f9394ba26e/src/IPrimusZkTLS.sol)
+# IPrimusZKTLS
+[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/c34826da72b2646b30fc46afeef78c9dafa36cd0/src/IPrimusZKTLS.sol)
 
-*Interface of PrimusZkTLS, which defines functions for handling attestations and related operations.*
+*Interface of PrimusZKTLS, which defines functions for handling attestations and related operations.*
 
 
 ## Functions
@@ -13,7 +13,7 @@ the integrity of the data, and the attestation's consistency.*
 
 
 ```solidity
-function verifyAttestation(Attestation calldata attestation) external view returns (bool);
+function verifyAttestation(Attestation calldata attestation) external view;
 ```
 **Parameters**
 

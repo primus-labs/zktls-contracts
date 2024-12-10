@@ -1,9 +1,11 @@
 # Summary
 - [Home](README.md)
 # src
-  - [Attestation](src/IPrimusZkTLS.sol/struct.Attestation.md)
-  - [AttNetworkRequest](src/IPrimusZkTLS.sol/struct.AttNetworkRequest.md)
-  - [AttNetworkResponseResolve](src/IPrimusZkTLS.sol/struct.AttNetworkResponseResolve.md)
-  - [Attestor](src/IPrimusZkTLS.sol/struct.Attestor.md)
-  - [IPrimusZkTLS](src/IPrimusZkTLS.sol/interface.IPrimusZkTLS.md)
-  - [PrimusZkTLS](src/PrimusZkTLS.sol/contract.PrimusZkTLS.md)
+  - [Attestation](src/IPrimusZKTLS.sol/struct.Attestation.md)
+  - [AttNetworkRequest](src/IPrimusZKTLS.sol/struct.AttNetworkRequest.md)
+  - [AttNetworkResponseResolve](src/IPrimusZKTLS.sol/struct.AttNetworkResponseResolve.md)
+  - [Attestor](src/IPrimusZKTLS.sol/struct.Attestor.md)
+  - [IPrimusZKTLS](src/IPrimusZKTLS.sol/interface.IPrimusZKTLS.md)
+  - [AddAttestor](src/PrimusZKTLS.sol/event.AddAttestor.md)
+  - [DelAttestor](src/PrimusZKTLS.sol/event.DelAttestor.md)
+  - [PrimusZKTLS](src/PrimusZKTLS.sol/contract.PrimusZKTLS.md)

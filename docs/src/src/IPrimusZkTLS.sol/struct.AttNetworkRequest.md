@@ -1,5 +1,5 @@
 # AttNetworkRequest
-[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/22782d123c4a94bbb8308ff89b2388f9394ba26e/src/IPrimusZkTLS.sol)
+[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/c34826da72b2646b30fc46afeef78c9dafa36cd0/src/IPrimusZKTLS.sol)
 
 *Structure for representing a network request send to jsk and related to the attestation.*
 

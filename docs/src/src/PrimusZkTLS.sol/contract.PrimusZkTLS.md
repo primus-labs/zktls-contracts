@@ -1,10 +1,10 @@
-# PrimusZkTLS
-[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/22782d123c4a94bbb8308ff89b2388f9394ba26e/src/PrimusZkTLS.sol)
+# PrimusZKTLS
+[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/c34826da72b2646b30fc46afeef78c9dafa36cd0/src/PrimusZKTLS.sol)
 
 **Inherits:**
-OwnableUpgradeable, [IPrimusZkTLS](/src/IPrimusZkTLS.sol/interface.IPrimusZkTLS.md)
+OwnableUpgradeable, [IPrimusZKTLS](/src/IPrimusZKTLS.sol/interface.IPrimusZKTLS.md)
 
-*Implementation of the {IPrimusZkTLS} interface, providing
+*Implementation of the {IPrimusZKTLS} interface, providing
 functionality to encode and verify attestations.
 This contract also inherits {OwnableUpgradeable} to enable ownership control,
 allowing for upgradeable contract management.*
@@ -88,7 +88,7 @@ Requirements:
 
 
 ```solidity
-function verifyAttestation(Attestation calldata attestation) external view returns (bool);
+function verifyAttestation(Attestation calldata attestation) external view;
 ```
 **Parameters**
 

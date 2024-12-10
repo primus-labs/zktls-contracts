@@ -1,9 +1,11 @@
 
 
 # Contents
-- [Attestation](IPrimusZkTLS.sol/struct.Attestation.md)
-- [AttNetworkRequest](IPrimusZkTLS.sol/struct.AttNetworkRequest.md)
-- [AttNetworkResponseResolve](IPrimusZkTLS.sol/struct.AttNetworkResponseResolve.md)
-- [Attestor](IPrimusZkTLS.sol/struct.Attestor.md)
-- [IPrimusZkTLS](IPrimusZkTLS.sol/interface.IPrimusZkTLS.md)
-- [PrimusZkTLS](PrimusZkTLS.sol/contract.PrimusZkTLS.md)
+- [Attestation](IPrimusZKTLS.sol/struct.Attestation.md)
+- [AttNetworkRequest](IPrimusZKTLS.sol/struct.AttNetworkRequest.md)
+- [AttNetworkResponseResolve](IPrimusZKTLS.sol/struct.AttNetworkResponseResolve.md)
+- [Attestor](IPrimusZKTLS.sol/struct.Attestor.md)
+- [IPrimusZKTLS](IPrimusZKTLS.sol/interface.IPrimusZKTLS.md)
+- [AddAttestor](PrimusZKTLS.sol/event.AddAttestor.md)
+- [DelAttestor](PrimusZKTLS.sol/event.DelAttestor.md)
+- [PrimusZKTLS](PrimusZKTLS.sol/contract.PrimusZKTLS.md)
