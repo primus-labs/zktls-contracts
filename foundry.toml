@@ -17,6 +17,8 @@ bsc = "https://bsc-dataseed.binance.org"
 opbnb = "https://opbnb-rpc.publicnode.com"
 holesky = "https://ethereum-holesky-rpc.publicnode.com"
 ethereum = "https://rpc.ankr.com/eth"
+taiko = "https://rpc.mainnet.taiko.xyz"
+hekla = "https://rpc.hekla.taiko.xyz" 
 
 [profile.env]
 PRIVATE_KEY = "${PRIVATE_KEY}"
