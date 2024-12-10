@@ -1,5 +1,5 @@
 # PrimusZKTLS
-[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/c34826da72b2646b30fc46afeef78c9dafa36cd0/src/PrimusZKTLS.sol)
+[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/598ebb1789581520b0b29d02a686bfae9b7ffe60/src/PrimusZKTLS.sol)
 
 **Inherits:**
 OwnableUpgradeable, [IPrimusZKTLS](/src/IPrimusZKTLS.sol/interface.IPrimusZKTLS.md)
@@ -164,4 +164,17 @@ function encodeResponse(AttNetworkResponseResolve[] calldata reponse) public pur
 |----|----|-----------|
 |`<none>`|`bytes32`|A bytes32 hash of the encoded response resolutions.|
 
+
+## Events
+### AddAttestor
+
+```solidity
+event AddAttestor(address _address, Attestor _attestor);
+```
+
+### DelAttestor
+
+```solidity
+event DelAttestor(address _address);
+```
 

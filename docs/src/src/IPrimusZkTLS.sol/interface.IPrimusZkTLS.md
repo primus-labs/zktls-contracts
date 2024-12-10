@@ -1,5 +1,5 @@
 # IPrimusZKTLS
-[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/c34826da72b2646b30fc46afeef78c9dafa36cd0/src/IPrimusZKTLS.sol)
+[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/598ebb1789581520b0b29d02a686bfae9b7ffe60/src/IPrimusZKTLS.sol)
 
 *Interface of PrimusZKTLS, which defines functions for handling attestations and related operations.*
 

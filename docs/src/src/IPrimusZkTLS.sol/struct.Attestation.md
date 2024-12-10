@@ -1,5 +1,5 @@
 # Attestation
-[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/c34826da72b2646b30fc46afeef78c9dafa36cd0/src/IPrimusZKTLS.sol)
+[Git Source](https://github.com/primus-labs/zkTLS-contracts/blob/598ebb1789581520b0b29d02a686bfae9b7ffe60/src/IPrimusZKTLS.sol)
 
 *Structure representing an attestation, which is a signed statement of fact.*
 
@@ -8,13 +8,13 @@
 struct Attestation {
     address recipient;
     AttNetworkRequest request;
-    AttNetworkResponseResolve[] reponse;
+    AttNetworkResponseResolve[] reponseResolve;
     string data;
     string attConditions;
     uint64 timestamp;
-    string attitionParams;
+    string additionParams;
     Attestor[] attestors;
-    bytes[] signature;
+    bytes[] signatures;
 }
 ```
 

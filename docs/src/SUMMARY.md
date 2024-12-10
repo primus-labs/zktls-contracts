@@ -6,6 +6,4 @@
   - [AttNetworkResponseResolve](src/IPrimusZKTLS.sol/struct.AttNetworkResponseResolve.md)
   - [Attestor](src/IPrimusZKTLS.sol/struct.Attestor.md)
   - [IPrimusZKTLS](src/IPrimusZKTLS.sol/interface.IPrimusZKTLS.md)
-  - [AddAttestor](src/PrimusZKTLS.sol/event.AddAttestor.md)
-  - [DelAttestor](src/PrimusZKTLS.sol/event.DelAttestor.md)
   - [PrimusZKTLS](src/PrimusZKTLS.sol/contract.PrimusZKTLS.md)

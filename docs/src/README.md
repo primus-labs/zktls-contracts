@@ -48,14 +48,16 @@ $ anvil
 ### Deploy
 
 ```shell
-$ forge script script/PrimusZkTLS.s.sol --rpc-url <your_rpc_url> --private-key <your_private_key> --broadcast
+$ forge script script/PrimusZKTLS.s.sol --rpc-url <your_rpc_url> --private-key <your_private_key> --broadcast
 ```
 
 ### Upgrade
 
 ```shell
-$ forge script script/UpgradeZkTLS.s.sol --rpc-url <your_rpc_url> --private-key <your_private_key> --broadcast
+$ forge script script/UpgradeZKTLS.s.sol --rpc-url <your_rpc_url> --private-key <your_private_key> --broadcast
+
 ```
+
 
 ### Cast
 

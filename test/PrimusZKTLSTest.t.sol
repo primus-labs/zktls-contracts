@@ -157,13 +157,13 @@ contract PrimusZKTLSTest is Test {
         Attestation memory attestation = Attestation({
             recipient: address(this),
             request: request,
-            reponse: response,
+            reponseResolve: response,
             data: bodyString,
             attConditions: '{"param":"value"}',
             timestamp: uint64(block.timestamp), 
-            attitionParams: '{"param":"value"}',
+            additionParams: '{"param":"value"}',
             attestors: new Attestor[] (1), // List of attestors who signed the attestation.
-            signature: new bytes[] (1)
+            signatures: new bytes[] (1)
         });
 
         //get Gas used for AttestationEncode
@@ -191,13 +191,13 @@ contract PrimusZKTLSTest is Test {
         Attestation memory attestation = Attestation({
             recipient: bob,
             request: request,
-            reponse: response,
+            reponseResolve: response,
             data: bodyString,
             attConditions: '{"param":"value"}',
             timestamp: uint64(block.timestamp), 
-            attitionParams: '{"param":"value"}', 
+            additionParams: '{"param":"value"}', 
             attestors: new Attestor[] (1),      
-            signature: new bytes[] (1)
+            signatures: new bytes[] (1)
         });
 
         console.log("recipient----address:%s",addressToString(attestation.recipient));
@@ -211,7 +211,7 @@ contract PrimusZKTLSTest is Test {
         console.log("signature----%s",bytesToHexString(signature));
 
 
-        attestation.signature[0] = signature;
+        attestation.signatures[0] = signature;
 
         uint256 gasStart = gasleft();
         zkTLS.verifyAttestation(attestation);

@@ -105,8 +105,8 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
      * @param attestation The attestation data to be verified.
      */
     function verifyAttestation(Attestation calldata attestation) external view {
-        require(attestation.signature.length == 1, "Invalid signature length");
-        bytes memory signature = attestation.signature[0];
+        require(attestation.signatures.length == 1, "Invalid signature length");
+        bytes memory signature = attestation.signatures[0];
         require(signature.length == 65,"Invalid signature length");
         bytes32 r;
         bytes32 s;
@@ -144,11 +144,11 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
         bytes memory encodeData = abi.encodePacked(
             attestation.recipient,
             encodeRequest(attestation.request),
-            encodeResponse(attestation.reponse),
+            encodeResponse(attestation.reponseResolve),
             attestation.data,
             attestation.attConditions,
             attestation.timestamp,
-            attestation.attitionParams
+            attestation.additionParams
         );
         return keccak256(encodeData);
     }
