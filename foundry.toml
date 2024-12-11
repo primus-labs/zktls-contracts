@@ -6,19 +6,25 @@ solc = "0.8.20"
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 
 [rpc_endpoints]
+#testnet
 local = "http://127.0.0.1:8545"
 sepolia = "https://sepolia.infura.io/v3/b6bf7d3508c941499b10025c0776eaf8"
-bsctestnet = "https://data-seed-prebsc-1-s3.binance.org:8545"
+bnbtestnet = "https://data-seed-prebsc-1-s3.binance.org:8545"
 opbnbtestnet = "https://opbnb-testnet-rpc.bnbchain.org"
+hekla = "https://rpc.hekla.taiko.xyz" 
+holesky = "https://ethereum-holesky-rpc.publicnode.com"
+mumbai = "https://polygon-mumbai-bor.publicnode.com"
+scrollsepolia = "https://sepolia-rpc.scroll.io/"
+
+#mainnet
 arbitrumone = "https://arb1.arbitrum.io/rpc"
 polygon = "https://polygon-rpc.com/"
-mumbai = "https://polygon-mumbai-bor.publicnode.com"
 bsc = "https://bsc-dataseed.binance.org"
 opbnb = "https://opbnb-rpc.publicnode.com"
-holesky = "https://ethereum-holesky-rpc.publicnode.com"
 ethereum = "https://rpc.ankr.com/eth"
 taiko = "https://rpc.mainnet.taiko.xyz"
-hekla = "https://rpc.hekla.taiko.xyz" 
+scroll = "https://rpc.scroll.io/"
+
 
 [profile.env]
 PRIVATE_KEY = "${PRIVATE_KEY}"

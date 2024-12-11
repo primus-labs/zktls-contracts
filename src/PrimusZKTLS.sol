@@ -40,11 +40,11 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
         require(defaultAddr != address(0), "Invalid address");
         _attestorsMapping[defaultAddr] = Attestor({
             attestorAddr: defaultAddr,
-            url: "Default metadata"
+            url: "https://primuslabs.xyz/"
         });
         _attestors.push(Attestor({
             attestorAddr: defaultAddr,
-            url: "Default metadata"
+            url: "https://primuslabs.xyz/"
         }));
     }
 
