@@ -15,9 +15,11 @@ hekla = "https://rpc.hekla.taiko.xyz"
 holesky = "https://ethereum-holesky-rpc.publicnode.com"
 mumbai = "https://polygon-mumbai-bor.publicnode.com"
 scrollsepolia = "https://sepolia-rpc.scroll.io/"
+lineasepolia = "https://linea-sepolia.infura.io/v3/b6bf7d3508c941499b10025c0776eaf8"
 
 #mainnet
 arbitrumone = "https://arb1.arbitrum.io/rpc"
+linea = "https://linea-mainnet.infura.io/v3/b6bf7d3508c941499b10025c0776eaf8"
 polygon = "https://polygon-rpc.com/"
 bsc = "https://bsc-dataseed.binance.org"
 opbnb = "https://opbnb-rpc.publicnode.com"

@@ -2,6 +2,10 @@
     "name": "@primuslabs/zktls-contracts",
     "version": "0.1.0",
     "description": "Primus zkTLS contracts",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/primus-labs/zktls-contracts.git"
+    },
     "main": "index.js",
     "files": [
         "./src"
