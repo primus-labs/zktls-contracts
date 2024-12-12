@@ -5,7 +5,7 @@ The Primus zkTLS protocol is compatible with multiple blockchains. We provide sm
 ## Documentation
 
 You can find the documentation here:
-[Primus-Doc](http://api-dev.padolabs.org:38080/)
+[Primus-Doc](https://docs.primuslabs.xyz/)
 
 ### Supported Blockchains
 
@@ -18,7 +18,7 @@ You can find the documentation here:
 
 If you have further needs for other blockchains, please contact us through our [community](https://discord.gg/AYGSqCkZTz) for support.
 
-You can check the contract address on the [Contract Addresses List](http://api-dev.padolabs.org:38080/data-verification/zk-tls-sdk/solidity/overview).
+You can check the contract address on the [Contract Addresses List](https://docs.primuslabs.xyz/data-verification/zk-tls-sdk/solidity/overview).
 
 ### Supported Languages
 
