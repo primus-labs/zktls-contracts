@@ -9,14 +9,6 @@ You can find the documentation here:
 
 ### Supported Blockchains
 
-- [x] Ethereum
-- [x] Binance Smart Chain
-- [x] Arbitrum
-- [x] Scroll
-- [x] Taiko
-
-If you have further needs for other blockchains, please contact us through our [community](https://discord.gg/AYGSqCkZTz) for support.
-
 You can check the contract address on the [Contract Addresses List](https://docs.primuslabs.xyz/data-verification/zk-tls-sdk/solidity/overview/).
 
 ### Supported Languages
