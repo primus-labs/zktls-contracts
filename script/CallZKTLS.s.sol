@@ -10,12 +10,12 @@ contract CallZkTLS is Script {
         //address senderAddress = vm.addr(senderPrivateKey);
         vm.startBroadcast(senderPrivateKey);
 
-        PrimusZKTLS primusZkTLS = PrimusZKTLS(address(0x11701Cf8Df597668C8dCCdD67Fd0836fB8564f80));
-        Attestor memory newUser = Attestor({
+        PrimusZKTLS primusZkTLS = PrimusZKTLS(address(0xB3d8DDDc793F75a930313785e5d1612747093f25));
+        Attestor memory attestor = Attestor({
             attestorAddr: address(0xe02bD7a6c8aA401189AEBb5Bad755c2610940A73),
-            url: "https://primuslabs.org"
+            url: "https://primuslabs.xyz/"
         });
-        primusZkTLS.setAttestor(newUser);
+        primusZkTLS.setAttestor(attestor);
 
         vm.stopBroadcast();
     }

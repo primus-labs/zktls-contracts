@@ -10,6 +10,7 @@
       "compile": "forge build",
       "deploy:zkTLS": "forge script script/PrimusZkTLS.s.sol --rpc-url holesky --broadcast",
       "upgrade:zkTLS": "forge script script/UpgradeZkTLS.s.sol --rpc-url holesky --broadcast",
+      "call:zkTLS": "forge script script/CallZKTLS.s.sol --rpc-url holesky --broadcast",
       "clean": "forge clean",
       "publish": "npm publish --access public"
     },
