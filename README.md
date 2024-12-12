@@ -11,7 +11,6 @@ You can find the documentation here:
 
 - [x] Ethereum
 - [x] Binance Smart Chain
-- [x] Polygon
 - [x] Arbitrum
 - [x] Scroll
 - [x] Taiko
