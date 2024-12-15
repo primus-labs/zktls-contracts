@@ -1,21 +1,33 @@
 require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades');
+require('@nomicfoundation/hardhat-foundry');
 require('dotenv').config()
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity:
-  {
+  solidity: {
     compilers: [
       {
         version: "0.8.20",
-      }
-    ]
+        settings: {
+          evmVersion: "paris",
+        },
+      },
+    ],
   },
+
   paths: {
     sources: './src',
   },
   networks: {
+    "lineasepolia": {
+      url: `https://linea-sepolia.infura.io/v3/b6bf7d3508c941499b10025c0776eaf8`,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    linea: {
+      url: `https://linea-mainnet.infura.io/v3/b6bf7d3508c941499b10025c0776eaf8`,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
     sepolia: {
         url: `https://sepolia.infura.io/v3/b6bf7d3508c941499b10025c0776eaf8`,
         accounts: [`${process.env.PRIVATE_KEY}`]
