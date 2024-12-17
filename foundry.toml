@@ -28,5 +28,8 @@ taiko = "https://rpc.mainnet.taiko.xyz"
 scroll = "https://rpc.scroll.io/"
 
 
+[etherscan]
+bscTestnet = { key = "MJ54XCK9VND1VICZ2QRZ7TIKI8DJ434XBR" }
+
 [profile.env]
 PRIVATE_KEY = "${PRIVATE_KEY}"

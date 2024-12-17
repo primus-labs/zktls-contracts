@@ -64,6 +64,16 @@ $ forge script script/UpgradeZKTLS.s.sol --rpc-url <your_rpc_url> --private-key 
 
 ```
 
+### Verify
+
+```shell
+forge verify-contract --chain-id chian_ID \
+    --etherscan-api-key your_private_apikey \
+    contract_address \
+    src/PrimusZKTLS.sol:PrimusZKTLS \
+    --watch
+```
+
 ### Help
 
 ```shell
