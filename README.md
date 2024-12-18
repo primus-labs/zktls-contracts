@@ -64,7 +64,7 @@ $ forge script script/UpgradeZKTLS.s.sol --rpc-url <your_rpc_url> --private-key 
 
 ```
 
-### Verify
+### Verify Logic
 
 ```shell
 forge verify-contract --chain-id chian_ID \
@@ -73,6 +73,12 @@ forge verify-contract --chain-id chian_ID \
     src/PrimusZKTLS.sol:PrimusZKTLS \
     --watch
 ```
+
+### Verify Proxy
+1. 在 BscScan 上，打开代理合约地址的页面。
+2. 点击 More Options -> Is this a proxy?。
+3. BscScan 会自动检测并关联逻辑合约地址。
+4. 输入逻辑合约地址，点击 Verify。
 
 ### Help
 
