@@ -74,6 +74,22 @@ forge verify-contract --chain-id chian_ID \
     --watch
 ```
 
+### Verify Proxy
+
+```shell
+cast abi-encode "constructor(address,address,bytes)" \
+    "0xLogicContractAddress" \
+    "0xProxyAdminAddress" \
+    $(cast abi-encode "initialize(address)" "0xDeployerAddress")
+
+forge verify-contract \
+    --chain-id chian_ID \
+    0xProxyContractAddress \
+    "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy" \ #proxy contract path
+    --verifier-api-key  API_KEY\
+    --constructor-args <结果>
+
+```
 ### Help
 
 ```shell
