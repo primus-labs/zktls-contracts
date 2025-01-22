@@ -13,5 +13,3 @@ artifacts
 cache_hardhat
 
 .env
-
-out
