@@ -87,7 +87,7 @@ forge verify-contract \
     0xProxyContractAddress \
     "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy" \ #proxy contract path
     --verifier-api-key  API_KEY\
-    --constructor-args <结果>
+    --constructor-args <abi-encode-result>
 
 ```
 ### Help
