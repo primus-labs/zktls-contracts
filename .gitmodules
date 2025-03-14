@@ -9,3 +9,6 @@
 	path = lib/openzeppelin-contracts-upgradeable
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable
 	branch = v5.0.0
+[submodule "lib/forge-zksync-std"]
+	path = lib/forge-zksync-std
+	url = https://github.com/Moonsong-Labs/forge-zksync-std
