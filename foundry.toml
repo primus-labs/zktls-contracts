@@ -17,6 +17,7 @@ mumbai = "https://polygon-mumbai-bor.publicnode.com"
 scrollsepolia = "https://sepolia-rpc.scroll.io/"
 lineasepolia = "https://linea-sepolia.infura.io/v3/b6bf7d3508c941499b10025c0776eaf8"
 sophontestnet = "https://rpc.testnet.sophon.xyz"
+baseSepoliaTestnet = "https://sepolia.base.org"
 
 #mainnet
 arbitrumone = "https://arb1.arbitrum.io/rpc"
@@ -28,6 +29,7 @@ ethereum = "https://rpc.ankr.com/eth"
 taiko = "https://rpc.mainnet.taiko.xyz"
 scroll = "https://rpc.scroll.io/"
 sophon = "https://rpc.sophon.xyz"
+baseMainnet = "https://mainnet.base.org"
 
 
 [etherscan]
