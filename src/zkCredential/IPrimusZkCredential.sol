@@ -16,7 +16,7 @@ interface IPrimusZkCredential {
      * @dev Submit zkTLS attestation object to Primus zkCredential contracts.
      * @param attestation The attestation is returned by Primus zkTLS SDK.
      */
-    function submitCredential(Attestation calldata attestation) external payable;
+    function submitCredential(Attestation calldata attestation, string calldata credentialType) external payable;
 
     /**
      * @dev Retrieve credentials of a specified type and params for the holder.
@@ -37,3 +37,25 @@ interface IPrimusZkCredential {
         bytes calldata params) external payable returns (bool);
 }
 
+string constant SpotVol30_G_Binance = "SpotVol30_G_Binance";
+string constant SpotVol30_G_Okx = "SpotVol30_G_Okx";
+string constant SpotVol30_G_Bybit = "SpotVol30_G_Bybit";
+string constant SpotVol30_G_Bitget = "SpotVol30_G_Bitget";
+
+string constant Account_Eq_X = "Account_Eq_X";
+string constant Account_Eq_Tiktok = "Account_Eq_Tiktok";
+string constant Account_Eq_Google = "Account_Eq_Google";
+string constant Account_Eq_RedNote = "Account_Eq_RedNote";
+
+string constant Account_X = "Account_X";
+string constant Account_Tiktok = "Account_Tiktok";
+string constant Account_Google = "Account_Google";
+string constant Account_Rednote = "Account_Rednote";
+
+string constant FollowAndAccount_X = "FollowAndAccount_X";
+
+
+struct SourceInfo {
+    string url;
+    string[] jsonPath;
+}
