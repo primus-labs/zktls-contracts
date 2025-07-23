@@ -14,7 +14,7 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
 
     IPrimusZKTLS internal primusZKTLS;
     // Store all predefined type zkCredentials, the key is holder address and credentialType.
-    mapping(address => mapping(string => Credential[])) public zkCredentials;
+    mapping(address => mapping(string => Credential[])) private zkCredentials;
     // Store all the credentialType source url and response json path. The key is credentialType.
     mapping(string => SourceInfo) public sourceInfos;
 
@@ -30,8 +30,14 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
     function submitCredential(Attestation calldata attestation, string calldata credentialType) external payable {
         _checkSourceInfos(attestation, credentialType);
         primusZKTLS.verifyAttestation(attestation);
-        if (credentialType.startsWith("SpotVol30_G")) {
+        if (credentialType.startsWith("SpotVol30G_")) {
             string memory value = _checkAndGetSpotVol30G(attestation);
+        } else if (credentialType.startsWith("AccountEq_")) {
+            string memory value = _checkAndGetAccountEq(attestation);
+        } else if (credentialType.startsWith("Account_")) {
+            string memory value = _checkAndGetAccount(attestation);
+        } else if (credentialType.equals(FollowEqAndAccount_X)) {
+            (string memory followingUsername, string memory userName) = _checkAndGetFollowEqAndAccountX(attestation);
         }
     }
 
@@ -66,12 +72,46 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
 
 
     function _checkSourceInfos(Attestation calldata att, string calldata creType) internal view {
+        require(sourceInfos[creType].sourceItems.length == 1 || sourceInfos[creType].sourceItems.length == 2, "url len err");
+        if (sourceInfos[creType].sourceItems.length == 1) {
+            _checkSourceInfosOne(att, creType);
+        } else {
+            _checkSourceInfosTwo(att, creType);
+        }
+    }
+
+    function _checkSourceInfosOne(Attestation calldata att, string calldata creType) internal view {
         string memory urlCheck = att.additionParams.extractValue("requests[1].url");
         require(urlCheck.equals(""), "too more url");
-        require(att.request.url.startsWith(sourceInfos[creType].url), "url err");
-        require(att.reponseResolve.length == sourceInfos[creType].jsonPath.length, "res len err");
+        _checkSourceInfosFirstRequest(att, creType);
+    }
+
+    function _checkSourceInfosTwo(Attestation calldata att, string calldata creType) internal view {
+        _checkSourceInfosFirstRequest(att, creType);
+        string[] memory keys = new string[](5);
+        keys[0] = "requests[2].url";
+        keys[1] = "reponseResolves[1][1].parsePath";
+        keys[2] = "requests[1].url";
+        keys[3] = "reponseResolves[1][0].parsePath";
+        // keys[4] = "reponseResolves[1][0].keyName";
+        string[] memory values = att.additionParams.extractArrayValue(keys);
+        string memory urlCheck = values[0];
+        require(urlCheck.equals(""), "too more url");
+        string memory parseCheck = values[1];
+        require(parseCheck.equals(""), "too more reponseResolves");
+
+        string memory url1 = values[2];
+        string memory reponseResolve1 = values[3];
+        // string memory keyName1 = values[4];
+        require(url1.startsWith(sourceInfos[creType].sourceItems[1].url), "url1 error");
+        require(reponseResolve1.equals(sourceInfos[creType].sourceItems[1].jsonPath[0]), "json path error");
+    }
+
+    function _checkSourceInfosFirstRequest(Attestation calldata att, string calldata creType) internal view {
+        require(att.request.url.startsWith(sourceInfos[creType].sourceItems[0].url), "url err");
+        require(att.reponseResolve.length == sourceInfos[creType].sourceItems[0].jsonPath.length, "res len err");
         for (uint8 i=0; i<att.reponseResolve.length; i++) {
-            require(att.reponseResolve[i].parsePath.equals(sourceInfos[creType].jsonPath[i]), "res path err");
+            require(att.reponseResolve[i].parsePath.equals(sourceInfos[creType].sourceItems[0].jsonPath[i]), "res path err");
         }
     }
 
@@ -79,6 +119,42 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
         string memory op = att.attConditions.extractValue("op");
         require(op.equals(">") || op.equals(">="), "op err");
         return att.attConditions.extractValue("value");
+    }
+
+    function _checkAndGetAccountEq(Attestation calldata att) internal pure returns (string memory) {
+        string memory op = att.attConditions.extractValue("op");
+        require(op.equals("STREQ"), "op err");
+        return att.attConditions.extractValue("value");
+    }
+
+    function _checkAndGetAccount(Attestation calldata att) internal pure returns (string memory) {
+        string memory userName = att.data.extractValue(att.reponseResolve[0].keyName);
+        return userName;
+    }
+
+    function _checkAndGetFollowEqAndAccountX(Attestation calldata att) internal pure returns (string memory, string memory) {
+        string memory followingUsername;
+        string[] memory strs = att.attConditions.split("},{");
+        for (uint i=0; i<strs.length; i++) {
+            string[] memory keysConditions = new string[](3);
+            keysConditions[0] = "op";
+            keysConditions[1] = "field";
+            keysConditions[2] = "value";
+            string[] memory valuesConditions = strs[i].extractArrayValue(keysConditions);
+            if (valuesConditions[1].equals("$.data.user.result.relationship_perspectives.following")) {
+                require(valuesConditions[2].equals("true") && valuesConditions[0].equals("STREQ"), "following error");
+            }
+            if (valuesConditions[1].equals("$.data.user.result.core.screen_name")) {
+                require(valuesConditions[0].equals("STREQ"), "following name error");
+                followingUsername = valuesConditions[2];
+            }
+            if (valuesConditions[1].equals("$.screen_name")) {
+                require(valuesConditions[0].equals("REVEAL_STRING"), "name op error");
+            }
+        }
+        string memory keyName1 = att.additionParams.extractValue("reponseResolves[1][0].keyName");
+        string memory userName = att.data.extractValue(keyName1);
+        return (followingUsername, userName);
     }
 
 }

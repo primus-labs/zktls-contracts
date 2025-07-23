@@ -37,25 +37,31 @@ interface IPrimusZkCredential {
         bytes calldata params) external payable returns (bool);
 }
 
-string constant SpotVol30_G_Binance = "SpotVol30_G_Binance";
-string constant SpotVol30_G_Okx = "SpotVol30_G_Okx";
-string constant SpotVol30_G_Bybit = "SpotVol30_G_Bybit";
-string constant SpotVol30_G_Bitget = "SpotVol30_G_Bitget";
+string constant SpotVol30G_Binance = "SpotVol30G_Binance";
+string constant SpotVol30G_Okx = "SpotVol30G_Okx";
+string constant SpotVol30G_Bybit = "SpotVol30G_Bybit";
+string constant SpotVol30G_Bitget = "SpotVol30G_Bitget";
 
-string constant Account_Eq_X = "Account_Eq_X";
-string constant Account_Eq_Tiktok = "Account_Eq_Tiktok";
-string constant Account_Eq_Google = "Account_Eq_Google";
-string constant Account_Eq_RedNote = "Account_Eq_RedNote";
+string constant AccountEq_X = "AccountEq_X";
+string constant AccountEq_Tiktok = "AccountEq_Tiktok";
+string constant AccountEq_Google = "AccountEq_Google";
+string constant AccountEq_RedNote = "AccountEq_RedNote";
 
 string constant Account_X = "Account_X";
 string constant Account_Tiktok = "Account_Tiktok";
 string constant Account_Google = "Account_Google";
 string constant Account_Rednote = "Account_Rednote";
 
-string constant FollowAndAccount_X = "FollowAndAccount_X";
+string constant FollowEqAndAccount_X = "FollowEqAndAccount_X";
 
 
-struct SourceInfo {
+struct SourceItem {
     string url;
     string[] jsonPath;
+}
+
+struct SourceInfo {
+    SourceItem[] sourceItems;
+    address checkContract;
+    bytes checkParams;
 }
