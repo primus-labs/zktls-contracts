@@ -3,7 +3,7 @@ src = "src"
 out = "out"
 libs = ["lib"]
 solc = "0.8.20"
-optimize = true
+optimizer = true
 optimizer_runs = 200
 via_ir = true
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
@@ -22,6 +22,7 @@ lineasepolia = "https://linea-sepolia.infura.io/v3/b6bf7d3508c941499b10025c0776e
 sophontestnet = "https://rpc.testnet.sophon.xyz"
 baseSepoliaTestnet = "https://sepolia.base.org"
 pharostestnet = "https://testnet.dplabs-internal.com"
+pharosAtlanticTestnet = "https://atlantic.dplabs-internal.com"
 unichainsepolia = "https://sepolia.unichain.org/"
 
 #mainnet
@@ -37,6 +38,7 @@ sophon = "https://rpc.sophon.xyz"
 baseMainnet = "https://mainnet.base.org"
 camp = "https://rpc.basecamp.t.raas.gelato.cloud"
 unichainMainnet = "https://mainnet.unichain.org"
+monad = "https://rpc.monad.xyz"
 
 
 [etherscan]

@@ -11,6 +11,7 @@ contract DeployPrimusZKTLS is Script {
         // 1. Get private key
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         address deployerAddress = vm.addr(deployerPrivateKey);
+        console.log("Deployer Address: ", deployerAddress);
         vm.startBroadcast(deployerPrivateKey);
 
         // 2. Deploy logic contract (implementation)
