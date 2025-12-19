@@ -8,7 +8,7 @@
 struct Attestation {
     address recipient;
     AttNetworkRequest request;
-    AttNetworkResponseResolve[] reponseResolve;
+    AttNetworkResponseResolve[] responseResolve;
     string data;
     string attConditions;
     uint64 timestamp;

@@ -90,28 +90,28 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
         _checkSourceInfosFirstRequest(att, creType);
         string[] memory keys = new string[](5);
         keys[0] = "requests[2].url";
-        keys[1] = "reponseResolves[1][1].parsePath";
+        keys[1] = "responseResolves[1][1].parsePath";
         keys[2] = "requests[1].url";
-        keys[3] = "reponseResolves[1][0].parsePath";
-        // keys[4] = "reponseResolves[1][0].keyName";
+        keys[3] = "responseResolves[1][0].parsePath";
+        // keys[4] = "responseResolves[1][0].keyName";
         string[] memory values = att.additionParams.extractArrayValue(keys);
         string memory urlCheck = values[0];
         require(urlCheck.equals(""), "too more url");
         string memory parseCheck = values[1];
-        require(parseCheck.equals(""), "too more reponseResolves");
+        require(parseCheck.equals(""), "too more responseResolves");
 
         string memory url1 = values[2];
-        string memory reponseResolve1 = values[3];
+        string memory responseResolve1 = values[3];
         // string memory keyName1 = values[4];
         require(url1.startsWith(sourceInfos[creType].sourceItems[1].url), "url1 error");
-        require(reponseResolve1.equals(sourceInfos[creType].sourceItems[1].jsonPath[0]), "json path error");
+        require(responseResolve1.equals(sourceInfos[creType].sourceItems[1].jsonPath[0]), "json path error");
     }
 
     function _checkSourceInfosFirstRequest(Attestation calldata att, string calldata creType) internal view {
         require(att.request.url.startsWith(sourceInfos[creType].sourceItems[0].url), "url err");
-        require(att.reponseResolve.length == sourceInfos[creType].sourceItems[0].jsonPath.length, "res len err");
-        for (uint8 i=0; i<att.reponseResolve.length; i++) {
-            require(att.reponseResolve[i].parsePath.equals(sourceInfos[creType].sourceItems[0].jsonPath[i]), "res path err");
+        require(att.responseResolve.length == sourceInfos[creType].sourceItems[0].jsonPath.length, "res len err");
+        for (uint8 i=0; i<att.responseResolve.length; i++) {
+            require(att.responseResolve[i].parsePath.equals(sourceInfos[creType].sourceItems[0].jsonPath[i]), "res path err");
         }
     }
 
@@ -128,7 +128,7 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
     }
 
     function _checkAndGetAccount(Attestation calldata att) internal pure returns (string memory) {
-        string memory userName = att.data.extractValue(att.reponseResolve[0].keyName);
+        string memory userName = att.data.extractValue(att.responseResolve[0].keyName);
         return userName;
     }
 
@@ -152,7 +152,7 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
                 require(valuesConditions[0].equals("REVEAL_STRING"), "name op error");
             }
         }
-        string memory keyName1 = att.additionParams.extractValue("reponseResolves[1][0].keyName");
+        string memory keyName1 = att.additionParams.extractValue("responseResolves[1][0].keyName");
         string memory userName = att.data.extractValue(keyName1);
         return (followingUsername, userName);
     }
