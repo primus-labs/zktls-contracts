@@ -8,11 +8,11 @@ pragma solidity ^0.8.20;
 struct Attestation {
     address recipient; // The recipient of the attestation.
     AttNetworkRequest request; // The network request send to jsk and related to the attestation.
-    AttNetworkResponseResolve[] reponseResolve; // The response details responsed from jdk.
+    AttNetworkResponseResolve[] responseResolve; // The response details responded from jdk.
     string data; // Real data in the pending body provided in JSON string format.
     string attConditions; // Attestation parameters in JSON string format.
     uint64 timestamp; // The timestamp of when the attestation was created.
-    string additionParams; // Extra data for more inormation.
+    string additionParams; // Extra data for more information.
     Attestor[] attestors; // List of attestors who signed the attestation.
     bytes[] signatures; // signature from the attestor.
 }

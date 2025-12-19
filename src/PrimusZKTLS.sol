@@ -144,7 +144,7 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
         bytes memory encodeData = abi.encodePacked(
             attestation.recipient,
             encodeRequest(attestation.request),
-            encodeResponse(attestation.reponseResolve),
+            encodeResponse(attestation.responseResolve),
             attestation.data,
             attestation.attConditions,
             attestation.timestamp,
@@ -180,19 +180,19 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
      * This iterates through the response array and encodes each field, creating
      * a unique hash representing the full response data.
      *
-     * @param reponse The array of response resolutions to encode.
+     * @param response The array of response resolutions to encode.
      * @return A bytes32 hash of the encoded response resolutions.
      */
     function encodeResponse(
-        AttNetworkResponseResolve[] calldata reponse
+        AttNetworkResponseResolve[] calldata response
     ) public pure returns (bytes32) {
         bytes memory encodeData;
-        for (uint256 i = 0; i < reponse.length; i++) {
+        for (uint256 i = 0; i < response.length; i++) {
             encodeData = abi.encodePacked(
                 encodeData,
-                reponse[i].keyName,
-                reponse[i].parseType,
-                reponse[i].parsePath
+                response[i].keyName,
+                response[i].parseType,
+                response[i].parsePath
             );
         }
         return keccak256(encodeData);

@@ -150,13 +150,13 @@ a unique hash representing the full response data.*
 
 
 ```solidity
-function encodeResponse(AttNetworkResponseResolve[] calldata reponse) public pure returns (bytes32);
+function encodeResponse(AttNetworkResponseResolve[] calldata response) public pure returns (bytes32);
 ```
 **Parameters**
 
 |Name|Type|Description|
 |----|----|-----------|
-|`reponse`|`AttNetworkResponseResolve[]`|The array of response resolutions to encode.|
+|`response`|`AttNetworkResponseResolve[]`|The array of response resolutions to encode.|
 
 **Returns**
 

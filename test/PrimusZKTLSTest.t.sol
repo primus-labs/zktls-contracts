@@ -157,7 +157,7 @@ contract PrimusZKTLSTest is Test {
         Attestation memory attestation = Attestation({
             recipient: address(this),
             request: request,
-            reponseResolve: response,
+            responseResolve: response,
             data: bodyString,
             attConditions: '{"param":"value"}',
             timestamp: uint64(block.timestamp), 
@@ -191,7 +191,7 @@ contract PrimusZKTLSTest is Test {
         Attestation memory attestation = Attestation({
             recipient: bob,
             request: request,
-            reponseResolve: response,
+            responseResolve: response,
             data: bodyString,
             attConditions: '{"param":"value"}',
             timestamp: uint64(block.timestamp), 
