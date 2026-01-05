@@ -13,3 +13,7 @@ artifacts
 cache_hardhat
 
 .env
+zkout
+out
+foundryup-zksync
+broadcast
