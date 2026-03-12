@@ -25,6 +25,7 @@ pharostestnet = "https://testnet.dplabs-internal.com"
 pharosAtlanticTestnet = "https://atlantic.dplabs-internal.com"
 unichainsepolia = "https://sepolia.unichain.org/"
 hashKeyChainTestnet = "https://testnet.hsk.xyz"
+xlayerTestnet = "https://testrpc.xlayer.tech/terigon"
 
 #mainnet
 arbitrumone = "https://arb1.arbitrum.io/rpc"
@@ -41,6 +42,7 @@ camp = "https://rpc.basecamp.t.raas.gelato.cloud"
 unichainMainnet = "https://mainnet.unichain.org"
 monad = "https://rpc.monad.xyz"
 hashKeyChain = "https://mainnet.hsk.xyz"
+xlayerMainnet = "https://rpc.xlayer.tech"
 
 
 [etherscan]
