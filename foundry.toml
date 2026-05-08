@@ -26,6 +26,7 @@ pharosAtlanticTestnet = "https://atlantic.dplabs-internal.com"
 unichainsepolia = "https://sepolia.unichain.org/"
 hashKeyChainTestnet = "https://testnet.hsk.xyz"
 xlayerTestnet = "https://testrpc.xlayer.tech/terigon"
+0gTestnet = "https://evmrpc-testnet.0g.ai"
 
 #mainnet
 arbitrumone = "https://arb1.arbitrum.io/rpc"
@@ -43,6 +44,8 @@ unichainMainnet = "https://mainnet.unichain.org"
 monad = "https://rpc.monad.xyz"
 hashKeyChain = "https://mainnet.hsk.xyz"
 xlayerMainnet = "https://rpc.xlayer.tech"
+0GMainnet = "https://evmrpc.0g.ai"
+pharos = "https://rpc.pharos.xyz"
 
 
 [etherscan]
