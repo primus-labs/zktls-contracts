@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import { Attestation } from "../IPrimusZKTLS.sol";
+import {Attestation} from "../IPrimusZKTLS.sol";
 
 struct Credential {
     string data;
@@ -22,19 +22,23 @@ interface IPrimusZkCredential {
      * @dev Retrieve credentials of a specified type and params for the holder.
      * @param holder The holder address for getting credential.
      * @param credentialType The credential type for getting. The parameter can be empty string.
-     * @param params The parameters other than the credential type, which can be an empty bytes array. 
+     * @param params The parameters other than the credential type, which can be an empty bytes array.
      */
-    function getCredentials(address holder, string calldata credentialType, 
-        bytes calldata params) external payable returns (Credential memory);
+    function getCredentials(address holder, string calldata credentialType, bytes calldata params)
+        external
+        payable
+        returns (Credential memory);
 
     /**
      * @dev Verify the holder whether have the specified credential.
      * @param holder The holder address for verification.
      * @param credentialType The verification credential type.
-     * @param params The parameters other than the credential type, which can be an empty bytes array. 
+     * @param params The parameters other than the credential type, which can be an empty bytes array.
      */
-    function verifyCredential(address holder, string calldata credentialType, 
-        bytes calldata params) external payable returns (bool);
+    function verifyCredential(address holder, string calldata credentialType, bytes calldata params)
+        external
+        payable
+        returns (bool);
 }
 
 string constant SpotVol30G_Binance = "SpotVol30G_Binance";
@@ -53,7 +57,6 @@ string constant Account_Google = "Account_Google";
 string constant Account_Rednote = "Account_Rednote";
 
 string constant FollowEqAndAccount_X = "FollowEqAndAccount_X";
-
 
 struct SourceItem {
     string url;

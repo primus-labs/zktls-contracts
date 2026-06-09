@@ -77,9 +77,9 @@ library JsonParser {
 
                 // Find the ':' (skip the space in between)
                 uint256 colon = keyEnd + 1;
-                while (colon < jsonBytes.length && jsonBytes[colon] != ':') colon++;
+                while (colon < jsonBytes.length && jsonBytes[colon] != ":") colon++;
                 colon++;
-                while (colon < jsonBytes.length && (jsonBytes[colon] == ' ')) colon++;
+                while (colon < jsonBytes.length && (jsonBytes[colon] == " ")) colon++;
 
                 // Determine if it is a string value (starting with ")
                 bool isQuoted = (colon < jsonBytes.length && jsonBytes[colon] == '"');
@@ -91,7 +91,7 @@ library JsonParser {
                 if (isQuoted) {
                     while (valEnd < jsonBytes.length && jsonBytes[valEnd] != '"') valEnd++;
                 } else {
-                    while (valEnd < jsonBytes.length && jsonBytes[valEnd] != ',' && jsonBytes[valEnd] != '}') valEnd++;
+                    while (valEnd < jsonBytes.length && jsonBytes[valEnd] != "," && jsonBytes[valEnd] != "}") valEnd++;
                 }
 
                 bytes memory valBytes = new bytes(valEnd - valStart);

@@ -5,10 +5,8 @@ pragma solidity ^0.8.20;
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {IPrimusZKTLS, Attestation, AttNetworkRequest, AttNetworkResponseResolve, Attestor} from "./IPrimusZKTLS.sol";
 
-
-
 /**
- * @dev Implementation of the {IPrimusZKTLS} interface, providing 
+ * @dev Implementation of the {IPrimusZKTLS} interface, providing
  * functionality to encode and verify attestations.
  *
  * This contract also inherits {OwnableUpgradeable} to enable ownership control,
@@ -26,26 +24,26 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
     // Defines an event triggered when an existing attestor is removed
     // @param _address The address of the attestor
     event DelAttestor(address _address);
-    
-     /**
+
+    /**
      * @dev initialize function to set the owner of the contract.
      * This function is called during the contract deployment.
      */
-    function initialize(address _owner) public initializer {
+    function initialize(address _owner, Attestor[] calldata initialAttestors) public initializer {
         __Ownable_init(_owner);
-        setupDefaultAttestor(_owner);
+        require(initialAttestors.length > 0, "Initial attestors required");
+        for (uint256 i = 0; i < initialAttestors.length; i++) {
+            _setAttestor(initialAttestors[i]);
+        }
     }
 
-    function setupDefaultAttestor(address defaultAddr) internal {
-        require(defaultAddr != address(0), "Invalid address");
-        _attestorsMapping[defaultAddr] = Attestor({
-            attestorAddr: defaultAddr,
-            url: "https://primuslabs.xyz/"
-        });
-        _attestors.push(Attestor({
-            attestorAddr: defaultAddr,
-            url: "https://primuslabs.xyz/"
-        }));
+    function _setAttestor(Attestor calldata attestor) internal {
+        require(attestor.attestorAddr != address(0), "Attestor address cannot be zero");
+        if (_attestorsMapping[attestor.attestorAddr].attestorAddr == address(0)) {
+            _attestors.push(attestor);
+        }
+        _attestorsMapping[attestor.attestorAddr] = attestor;
+        emit AddAttestor(attestor.attestorAddr, attestor);
     }
 
     /**
@@ -54,18 +52,11 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
      * Requirements:
      * - The caller must be the owner of the contract.
      *
-     * 
+     *
      * @param attestor The attestor to associate with the recipient.
      */
     function setAttestor(Attestor calldata attestor) external onlyOwner {
-        require(attestor.attestorAddr != address(0), "Attestor address cannot be zero");
-        if(_attestorsMapping[attestor.attestorAddr].attestorAddr == address(0) ) {
-            _attestors.push(attestor);
-        }
-        // Set the attestor for the recipient
-        _attestorsMapping[attestor.attestorAddr] = attestor;
-
-        emit AddAttestor(attestor.attestorAddr,attestor);
+        _setAttestor(attestor);
     }
 
     /**
@@ -81,18 +72,17 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
         require(_attestorsMapping[attestorAddr].attestorAddr != address(0), "No attestor found for the recipient");
         delete _attestorsMapping[attestorAddr];
 
-        // update _attestors 
+        // update _attestors
         for (uint256 i = 0; i < _attestors.length; i++) {
             if (_attestors[i].attestorAddr == attestorAddr) {
-                _attestors[i] = _attestors[_attestors.length - 1];  
-                _attestors.pop();  
+                _attestors[i] = _attestors[_attestors.length - 1];
+                _attestors.pop();
                 break;
             }
-         }
+        }
 
-         emit DelAttestor(attestorAddr);
+        emit DelAttestor(attestorAddr);
     }
-
 
     /**
      * @dev Verifies the validity of a given attestation.
@@ -107,7 +97,7 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
     function verifyAttestation(Attestation calldata attestation) external view {
         require(attestation.signatures.length == 1, "Invalid signature length");
         bytes memory signature = attestation.signatures[0];
-        require(signature.length == 65,"Invalid signature length");
+        require(signature.length == 65, "Invalid signature length");
         bytes32 r;
         bytes32 s;
         uint8 v;
@@ -128,7 +118,6 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
         require(i < _attestors.length, "Invalid signature");
     }
 
-
     /**
      * @dev Encodes an attestation into a bytes32 hash.
      *
@@ -138,9 +127,7 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
      * @param attestation The attestation data to encode.
      * @return A bytes32 hash of the encoded attestation.
      */
-    function encodeAttestation(
-        Attestation calldata attestation
-    ) public pure returns (bytes32) {
+    function encodeAttestation(Attestation calldata attestation) public pure returns (bytes32) {
         bytes memory encodeData = abi.encodePacked(
             attestation.recipient,
             encodeRequest(attestation.request),
@@ -161,18 +148,10 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
      * @param request The network request to encode.
      * @return A bytes32 hash of the encoded network request.
      */
-    function encodeRequest(
-        AttNetworkRequest calldata request
-    ) public pure returns (bytes32) {
-        bytes memory encodeData = abi.encodePacked(
-            request.url,
-            request.header,
-            request.method,
-            request.body
-        );
+    function encodeRequest(AttNetworkRequest calldata request) public pure returns (bytes32) {
+        bytes memory encodeData = abi.encodePacked(request.url, request.header, request.method, request.body);
         return keccak256(encodeData);
     }
-
 
     /**
      * @dev Encodes a list of network response resolutions into a bytes32 hash.
@@ -183,19 +162,11 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
      * @param reponse The array of response resolutions to encode.
      * @return A bytes32 hash of the encoded response resolutions.
      */
-    function encodeResponse(
-        AttNetworkResponseResolve[] calldata reponse
-    ) public pure returns (bytes32) {
+    function encodeResponse(AttNetworkResponseResolve[] calldata reponse) public pure returns (bytes32) {
         bytes memory encodeData;
         for (uint256 i = 0; i < reponse.length; i++) {
-            encodeData = abi.encodePacked(
-                encodeData,
-                reponse[i].keyName,
-                reponse[i].parseType,
-                reponse[i].parsePath
-            );
+            encodeData = abi.encodePacked(encodeData, reponse[i].keyName, reponse[i].parseType, reponse[i].parsePath);
         }
         return keccak256(encodeData);
     }
-
 }

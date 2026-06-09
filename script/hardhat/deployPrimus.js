@@ -1,5 +1,12 @@
 const hre = require("hardhat");
 
+function requiredEnv(name) {
+    if (!process.env[name]) {
+        throw new Error(`Missing required env: ${name}`);
+    }
+    return process.env[name];
+}
+
 async function main() {
     const [deployer] = await hre.ethers.getSigners();
     console.log(
@@ -7,9 +14,24 @@ async function main() {
         deployer.address
     );
 
+    const initialAttestors = [
+        {
+            attestorAddr: requiredEnv("ATTESTOR_1_ADDRESS"),
+            url: requiredEnv("ATTESTOR_1_URL"),
+        },
+        {
+            attestorAddr: requiredEnv("ATTESTOR_2_ADDRESS"),
+            url: requiredEnv("ATTESTOR_2_URL"),
+        },
+        {
+            attestorAddr: requiredEnv("ATTESTOR_3_ADDRESS"),
+            url: requiredEnv("ATTESTOR_3_URL"),
+        },
+    ];
+
     const contract = await hre.ethers.getContractFactory("PrimusZKTLS");
     const primus = await hre.upgrades.deployProxy(contract,
-        [deployer.address], {initializer: 'initialize'});
+        [deployer.address, initialAttestors], {initializer: 'initialize'});
     await primus.waitForDeployment();
     const primusProxyAddress = await primus.getAddress();
     const primusImplementationAddress = await hre.upgrades.erc1967.getImplementationAddress(primusProxyAddress);

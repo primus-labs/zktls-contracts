@@ -44,18 +44,16 @@ struct Attestor {
     string url; // URL associated with the attestor, such as a profile or additional information.
 }
 
-
 /**
  * @dev Interface of PrimusZKTLS, which defines functions for handling attestations and related operations.
  */
 interface IPrimusZKTLS {
-  
     /**
-     *  @dev Verifies the validity of a given attestation. 
-     * This includes checking the signature of attestor, 
+     *  @dev Verifies the validity of a given attestation.
+     * This includes checking the signature of attestor,
      * the integrity of the data, and the attestation's consistency.
      *
-     * @param attestation The attestation data to be verified. 
+     * @param attestation The attestation data to be verified.
      * It contains details about the recipient, request, response, and attestors.
      *
      * Requirements:
@@ -66,5 +64,4 @@ interface IPrimusZKTLS {
      * Emits no events.
      */
     function verifyAttestation(Attestation calldata attestation) external view;
-
 }

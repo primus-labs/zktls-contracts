@@ -16,12 +16,12 @@ contract UpgradePrimusZKTLS is Script {
 
         // 2. Retrieve the ProxyAdmin address and Proxy contract address
         address proxyAdminAddr = address(0x11111); // Replace with the actual ProxyAdmin address
-        address proxyAddr = address(0x2222);           // Replace with the actual Proxy address
+        address proxyAddr = address(0x2222); // Replace with the actual Proxy address
 
         // 3. Call the upgrade method of ProxyAdmin
         ProxyAdmin proxyAdmin = ProxyAdmin(proxyAdminAddr);
         ITransparentUpgradeableProxy proxy = ITransparentUpgradeableProxy(proxyAddr);
-        proxyAdmin.upgradeAndCall(proxy, address(newLogic),"");
+        proxyAdmin.upgradeAndCall(proxy, address(newLogic), "");
 
         console.log("Upgraded Proxy to New Logic Address: ", address(newLogic));
 

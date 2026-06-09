@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { Script } from "forge-std/Script.sol";
+import {Script} from "forge-std/Script.sol";
 import "../src/PrimusZKTLS.sol";
 
 contract CallZkTLS is Script {
@@ -18,8 +18,7 @@ contract CallZkTLS is Script {
 
         PrimusZKTLS primusZkTLS = PrimusZKTLS(address(0x4E78940F0019EbAEDc6F4995D7B8ABf060F7a341));
         Attestor memory attestor = Attestor({
-            attestorAddr: address(0xDB736B13E2f522dBE18B2015d0291E4b193D8eF6),
-            url: "https://primuslabs.xyz/"
+            attestorAddr: address(0xDB736B13E2f522dBE18B2015d0291E4b193D8eF6), url: "https://primuslabs.xyz/"
         });
 
         primusZkTLS.setAttestor(attestor);

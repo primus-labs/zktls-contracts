@@ -41,7 +41,7 @@ library StringUtils {
             return false;
         }
 
-        for (uint i = 0; i < suffixLength; i++) {
+        for (uint256 i = 0; i < suffixLength; i++) {
             if (originalBytes[originalLength - suffixLength + i] != suffixBytes[i]) {
                 return false;
             }
@@ -93,13 +93,13 @@ library StringUtils {
         require(delimBytes.length > 0, "Delimiter must not be empty");
 
         string[] memory partsTemp = new string[](strBytes.length);
-        uint partCount = 0;
+        uint256 partCount = 0;
 
-        uint lastIndex = 0;
-        uint i = 0;
+        uint256 lastIndex = 0;
+        uint256 i = 0;
         while (i <= strBytes.length - delimBytes.length) {
             bool matchDelimiter = true;
-            for (uint j = 0; j < delimBytes.length; j++) {
+            for (uint256 j = 0; j < delimBytes.length; j++) {
                 if (strBytes[i + j] != delimBytes[j]) {
                     matchDelimiter = false;
                     break;
@@ -118,18 +118,18 @@ library StringUtils {
         partsTemp[partCount++] = substring(_str, lastIndex, strBytes.length);
 
         string[] memory parts = new string[](partCount);
-        for (uint k = 0; k < partCount; k++) {
+        for (uint256 k = 0; k < partCount; k++) {
             parts[k] = partsTemp[k];
         }
 
         return parts;
     }
 
-    function substring(string memory str, uint startIndex, uint endIndex) internal pure returns (string memory) {
+    function substring(string memory str, uint256 startIndex, uint256 endIndex) internal pure returns (string memory) {
         bytes memory strBytes = bytes(str);
         require(endIndex >= startIndex && endIndex <= strBytes.length, "Invalid indices");
         bytes memory result = new bytes(endIndex - startIndex);
-        for (uint i = startIndex; i < endIndex; i++) {
+        for (uint256 i = startIndex; i < endIndex; i++) {
             result[i - startIndex] = strBytes[i];
         }
         return string(result);

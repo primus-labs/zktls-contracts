@@ -17,50 +17,52 @@ contract PrimusZKTLSTest is Test {
     address private addr1 = address(0x456);
     address private addr2 = address(0x789);
 
-    string constant urlString = "https://example.com/apiwdewd/121s1qs1qs?DDDSADWDDAWDWAWWAWW"; 
-    string constant headerString = '{"Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwi.M0NTY3ODM0NTY3ODM0NTY3ODM0NTY3ODM0NTY3OD..","X-Custom-Header-1":""Very-Long-Custom-Header-Value-That-Exceeds-Normal-Limits-Here-1234567890l-Limits-Here-1234567l-Limits-Here-1234567l-Limits-Here-1234567l-Limits-Here-1234567l-Limits-Here-1234567...","X-Custom-Header-2":"Another-Custom-Value-1234567890abcdefghijklmnopqrstuvwxyzghijklmnopqrstuvwxyghijklmnopqrstuvwxyghijklmnopqrstuvwxyghijklmnopqrstuvwxy", "Content-Type": "application/json","Accept": "application/json","User-Agent": "MyCustomClient/1.0","Cache-Control": "no-cache"}';
-    string constant bodyString = '{"metadata":{"timestamp": "2024-11-26T12:34:56Z","requestId": "123e4567-e89b-12d3-a456-426614174000","tags": ["large_request","test_data","example_usage"]},"data":{"items": [{"id": 1,"name": "Item One","description": "This is a detailed description of item one.","attributes": {"color": "red","size": "large","weight": 1.234}},{"id": 2,"name": "Item Two","description": "This is a detailed description of item two.","attributes": {"color": "blue","size": "medium","weight": 2.345}}],"extraData": {"subField1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.","subField2": ["Value1","Value2","Value3","Value4"],"nestedField": {"innerField1": "Deeply nested value","innerField2": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}}}}';
+    string constant urlString = "https://example.com/apiwdewd/121s1qs1qs?DDDSADWDDAWDWAWWAWW";
+    string constant headerString =
+        '{"Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwi.M0NTY3ODM0NTY3ODM0NTY3ODM0NTY3ODM0NTY3OD..","X-Custom-Header-1":""Very-Long-Custom-Header-Value-That-Exceeds-Normal-Limits-Here-1234567890l-Limits-Here-1234567l-Limits-Here-1234567l-Limits-Here-1234567l-Limits-Here-1234567l-Limits-Here-1234567...","X-Custom-Header-2":"Another-Custom-Value-1234567890abcdefghijklmnopqrstuvwxyzghijklmnopqrstuvwxyghijklmnopqrstuvwxyghijklmnopqrstuvwxyghijklmnopqrstuvwxy", "Content-Type": "application/json","Accept": "application/json","User-Agent": "MyCustomClient/1.0","Cache-Control": "no-cache"}';
+    string constant bodyString =
+        '{"metadata":{"timestamp": "2024-11-26T12:34:56Z","requestId": "123e4567-e89b-12d3-a456-426614174000","tags": ["large_request","test_data","example_usage"]},"data":{"items": [{"id": 1,"name": "Item One","description": "This is a detailed description of item one.","attributes": {"color": "red","size": "large","weight": 1.234}},{"id": 2,"name": "Item Two","description": "This is a detailed description of item two.","attributes": {"color": "blue","size": "medium","weight": 2.345}}],"extraData": {"subField1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.","subField2": ["Value1","Value2","Value3","Value4"],"nestedField": {"innerField1": "Deeply nested value","innerField2": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}}}}';
 
     Attestor private attestor1 = Attestor({attestorAddr: addr1, url: "Attestor 1"});
     Attestor private attestor2 = Attestor({attestorAddr: addr2, url: "Attestor 2"});
+
     function setUp() public {
         //deploy contract
         vm.prank(owner); // Set `owner` as the deployer
         zkTLS = new PrimusZKTLS();
         _signerPrivateKey = 0xA11CE;
         _signer = vm.addr(_signerPrivateKey);
-        zkTLS.initialize(owner);
+        Attestor[] memory initialAttestors = new Attestor[](1);
+        initialAttestors[0] = Attestor({attestorAddr: owner, url: "https://primuslabs.xyz/"});
+        zkTLS.initialize(owner, initialAttestors);
     }
 
     function addressToString(address addr) public pure returns (string memory) {
-        return Strings.toHexString(uint160(addr), 20); 
+        return Strings.toHexString(uint160(addr), 20);
     }
 
-    function createSampleAttestation() internal view returns(Attestor[] memory){
-        Attestor[] memory attes = new Attestor[] (1);
+    function createSampleAttestation() internal view returns (Attestor[] memory) {
+        Attestor[] memory attes = new Attestor[](1);
         for (uint256 i = 0; i < 1; i++) {
-            attes[i] = Attestor({
-                    attestorAddr: _signer,
-                    url: "https://attestor1.com/profile"
-            });
+            attes[i] = Attestor({attestorAddr: _signer, url: "https://attestor1.com/profile"});
         }
         return attes;
     }
 
     function createSampleResponses() internal pure returns (AttNetworkResponseResolve[] memory) {
-        AttNetworkResponseResolve[] memory response = new AttNetworkResponseResolve[] (3);
+        AttNetworkResponseResolve[] memory response = new AttNetworkResponseResolve[](3);
         for (uint256 i = 0; i < 3; i++) {
             response[i] = AttNetworkResponseResolve({
-                    keyName: "dASCZCSQFEQSDCKMASODCNPOND[OJDL;AKNC;KA;LCZMOQNOQWNPWNEO2NEPIOWNEO2EQWDNLKJQBDIQNWIUNINOIEDN2ONEDOI2NEDO2ISDKSMD]ND LWHBLQBEDKJEBDIUWSILSBCLQVSCUYDUH@3344OIIOQWEJ02J0J3ajdhpohodh92njabdpuhcqnwejkbiuhc0[qwncjqnsdonqowfoqwno;9 ujdwkfpokwedm1jf[oi]wc9hce98cbuie9gd71gd87d817g219ge97129g19g2812912]",
-                    parseType: "JSON121231uqwhdp9uh2i1ubdbjabdiwd1biu212",
-                    parsePath: "$.data.key1kn;ni[onwendiohed2ij20djasdj09wndoiqweoqheqhefpqhf9p92hf238dhdohwuhpbfoqufp92hfo2iefinoiedn2o9302]"
+                keyName: "dASCZCSQFEQSDCKMASODCNPOND[OJDL;AKNC;KA;LCZMOQNOQWNPWNEO2NEPIOWNEO2EQWDNLKJQBDIQNWIUNINOIEDN2ONEDOI2NEDO2ISDKSMD]ND LWHBLQBEDKJEBDIUWSILSBCLQVSCUYDUH@3344OIIOQWEJ02J0J3ajdhpohodh92njabdpuhcqnwejkbiuhc0[qwncjqnsdonqowfoqwno;9 ujdwkfpokwedm1jf[oi]wc9hce98cbuie9gd71gd87d817g219ge97129g19g2812912]",
+                parseType: "JSON121231uqwhdp9uh2i1ubdbjabdiwd1biu212",
+                parsePath: "$.data.key1kn;ni[onwendiohed2ij20djasdj09wndoiqweoqheqhefpqhf9p92hf238dhdohwuhpbfoqufp92hfo2iefinoiedn2o9302]"
             });
-        }    
-        
+        }
+
         return response;
     }
 
-     function test_SetAttestor() public {
+    function test_SetAttestor() public {
         vm.startPrank(owner); // Set the caller as the owner
         // Set an attestor for addr1
         zkTLS.setAttestor(attestor1);
@@ -109,15 +111,10 @@ contract PrimusZKTLSTest is Test {
     //     zkTLS.removeAttestor(addr1);
     // }
 
-
     function test_EncodeRequest() public {
         //constractor AttNetworkRequest data
-        AttNetworkRequest memory request = AttNetworkRequest({
-            url: urlString,
-            header: headerString,
-            method: "POST",
-            body: bodyString
-        });
+        AttNetworkRequest memory request =
+            AttNetworkRequest({url: urlString, header: headerString, method: "POST", body: bodyString});
 
         // get Gas used for encodeRequest
         uint256 gasStart = gasleft();
@@ -130,7 +127,7 @@ contract PrimusZKTLSTest is Test {
     function test_EncodeResponse() public {
         console.log("---test_EncodeResponse----");
         AttNetworkResponseResolve[] memory response = createSampleResponses();
-        console.log("response length %d",response.length);
+        console.log("response length %d", response.length);
         // get Gas used for EncodeResponse
         uint256 gasStart = gasleft();
         zkTLS.encodeResponse(response);
@@ -145,25 +142,21 @@ contract PrimusZKTLSTest is Test {
         // Set an attestor for addr1
         zkTLS.setAttestor(attestor1);
         //constractor AttNetworkRequest data
-        AttNetworkRequest memory request = AttNetworkRequest({
-            url: urlString,
-            header: headerString,
-            method: "GET",
-            body: bodyString
-        });
+        AttNetworkRequest memory request =
+            AttNetworkRequest({url: urlString, header: headerString, method: "GET", body: bodyString});
 
         AttNetworkResponseResolve[] memory response = createSampleResponses();
-       
+
         Attestation memory attestation = Attestation({
             recipient: address(this),
             request: request,
             reponseResolve: response,
             data: bodyString,
             attConditions: '{"param":"value"}',
-            timestamp: uint64(block.timestamp), 
+            timestamp: uint64(block.timestamp),
             additionParams: '{"param":"value"}',
-            attestors: new Attestor[] (1), // List of attestors who signed the attestation.
-            signatures: new bytes[] (1)
+            attestors: new Attestor[](1), // List of attestors who signed the attestation.
+            signatures: new bytes[](1)
         });
 
         //get Gas used for AttestationEncode
@@ -174,42 +167,36 @@ contract PrimusZKTLSTest is Test {
         emit log_named_uint("Gas Used for", gasUsed);
     }
 
-
-    function test_VerifierSignature() public  {
+    function test_VerifierSignature() public {
         vm.prank(owner); // Set the caller as the owner
-        
+
         zkTLS.setAttestor(Attestor({attestorAddr: _signer, url: "Attestor attestorSign"}));
-        AttNetworkRequest memory request = AttNetworkRequest({
-            url: urlString,
-            header: headerString,
-            method: "GET",
-            body: bodyString
-        });
+        AttNetworkRequest memory request =
+            AttNetworkRequest({url: urlString, header: headerString, method: "GET", body: bodyString});
         address bob = address(0x122222111111);
         AttNetworkResponseResolve[] memory response = createSampleResponses();
-       
+
         Attestation memory attestation = Attestation({
             recipient: bob,
             request: request,
             reponseResolve: response,
             data: bodyString,
             attConditions: '{"param":"value"}',
-            timestamp: uint64(block.timestamp), 
-            additionParams: '{"param":"value"}', 
-            attestors: new Attestor[] (1),      
-            signatures: new bytes[] (1)
+            timestamp: uint64(block.timestamp),
+            additionParams: '{"param":"value"}',
+            attestors: new Attestor[](1),
+            signatures: new bytes[](1)
         });
 
-        console.log("recipient----address:%s",addressToString(attestation.recipient));
-        
+        console.log("recipient----address:%s", addressToString(attestation.recipient));
+
         bytes32 digest = zkTLS.encodeAttestation(attestation);
-        
+
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(_signerPrivateKey, digest);
-        console.log("r:%d s:%d v:%d",uint256(r),uint256(s),v);
+        console.log("r:%d s:%d v:%d", uint256(r), uint256(s), v);
 
         bytes memory signature = abi.encodePacked(r, s, v); //get signature
-        console.log("signature----%s",bytesToHexString(signature));
-
+        console.log("signature----%s", bytesToHexString(signature));
 
         attestation.signatures[0] = signature;
 
@@ -218,15 +205,14 @@ contract PrimusZKTLSTest is Test {
         uint256 gasUsed = gasStart - gasleft();
 
         emit log_named_uint("verifyAttestationWithSingleSignature Gas Used for", gasUsed);
-       
     }
-    
+
     function parseAddr(string memory addrStr) internal pure returns (address) {
         bytes memory temp = bytes(addrStr);
-         uint160 addr;
+        uint160 addr;
         for (uint256 i = 2; i < 42; i++) {
-             uint8 b = uint8(temp[i]);
-             if (b >= 48 && b <= 57) {
+            uint8 b = uint8(temp[i]);
+            if (b >= 48 && b <= 57) {
                 addr = addr * 16 + (b - 48);
             } else if (b >= 97 && b <= 102) {
                 addr = addr * 16 + (b - 87);
@@ -239,15 +225,14 @@ contract PrimusZKTLSTest is Test {
 
     function bytesToHexString(bytes memory data) public pure returns (string memory) {
         bytes memory hexChars = "0123456789abcdef";
-        bytes memory hexString = new bytes(data.length * 2); 
+        bytes memory hexString = new bytes(data.length * 2);
 
         for (uint256 i = 0; i < data.length; i++) {
             uint8 currentByte = uint8(data[i]);
-            hexString[2 * i] = hexChars[currentByte >> 4]; 
-            hexString[2 * i + 1] = hexChars[currentByte & 0x0f]; 
+            hexString[2 * i] = hexChars[currentByte >> 4];
+            hexString[2 * i + 1] = hexChars[currentByte & 0x0f];
         }
 
         return string(hexString);
     }
-
 }

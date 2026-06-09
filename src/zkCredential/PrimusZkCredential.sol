@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import { Attestation, IPrimusZKTLS } from "../IPrimusZKTLS.sol";
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {Attestation, IPrimusZKTLS} from "../IPrimusZKTLS.sol";
 import "./IPrimusZkCredential.sol";
 import "../utils/StringUtils.sol";
 import "../utils/JsonParser.sol";
@@ -45,34 +45,36 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
      * @dev Retrieve credentials of a specified type and params for the holder.
      * @param holder The holder address for getting credential.
      * @param credentialType The credential type for getting. The parameter can be empty string.
-     * @param params The parameters other than the credential type, which can be an empty bytes array. 
+     * @param params The parameters other than the credential type, which can be an empty bytes array.
      */
-    function getCredentials(address holder, string calldata credentialType, 
-        bytes calldata params) external payable returns (Credential memory) {
-
-    }
+    function getCredentials(address holder, string calldata credentialType, bytes calldata params)
+        external
+        payable
+        returns (Credential memory)
+    {}
 
     /**
      * @dev Verify the holder whether have the specified credential.
      * @param holder The holder address for verification.
      * @param credentialType The verification credential type.
-     * @param params The parameters other than the credential type, which can be an empty bytes array. 
+     * @param params The parameters other than the credential type, which can be an empty bytes array.
      */
-    function verifyCredential(address holder, string calldata credentialType, 
-        bytes calldata params) external payable returns (bool) {
-
-    }
-
+    function verifyCredential(address holder, string calldata credentialType, bytes calldata params)
+        external
+        payable
+        returns (bool)
+    {}
 
     function setSourceInfos(string[] calldata credentialTypes, SourceInfo[] calldata sourceInfos_) external onlyOwner {
-        for (uint32 i=0; i<credentialTypes.length; i++) {
+        for (uint32 i = 0; i < credentialTypes.length; i++) {
             sourceInfos[credentialTypes[i]] = sourceInfos_[i];
         }
     }
 
-
     function _checkSourceInfos(Attestation calldata att, string calldata creType) internal view {
-        require(sourceInfos[creType].sourceItems.length == 1 || sourceInfos[creType].sourceItems.length == 2, "url len err");
+        require(
+            sourceInfos[creType].sourceItems.length == 1 || sourceInfos[creType].sourceItems.length == 2, "url len err"
+        );
         if (sourceInfos[creType].sourceItems.length == 1) {
             _checkSourceInfosOne(att, creType);
         } else {
@@ -110,8 +112,10 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
     function _checkSourceInfosFirstRequest(Attestation calldata att, string calldata creType) internal view {
         require(att.request.url.startsWith(sourceInfos[creType].sourceItems[0].url), "url err");
         require(att.reponseResolve.length == sourceInfos[creType].sourceItems[0].jsonPath.length, "res len err");
-        for (uint8 i=0; i<att.reponseResolve.length; i++) {
-            require(att.reponseResolve[i].parsePath.equals(sourceInfos[creType].sourceItems[0].jsonPath[i]), "res path err");
+        for (uint8 i = 0; i < att.reponseResolve.length; i++) {
+            require(
+                att.reponseResolve[i].parsePath.equals(sourceInfos[creType].sourceItems[0].jsonPath[i]), "res path err"
+            );
         }
     }
 
@@ -132,10 +136,14 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
         return userName;
     }
 
-    function _checkAndGetFollowEqAndAccountX(Attestation calldata att) internal pure returns (string memory, string memory) {
+    function _checkAndGetFollowEqAndAccountX(Attestation calldata att)
+        internal
+        pure
+        returns (string memory, string memory)
+    {
         string memory followingUsername;
         string[] memory strs = att.attConditions.split("},{");
-        for (uint i=0; i<strs.length; i++) {
+        for (uint256 i = 0; i < strs.length; i++) {
             string[] memory keysConditions = new string[](3);
             keysConditions[0] = "op";
             keysConditions[1] = "field";
@@ -156,5 +164,4 @@ contract PrimusZkCredential is OwnableUpgradeable, IPrimusZkCredential {
         string memory userName = att.data.extractValue(keyName1);
         return (followingUsername, userName);
     }
-
 }
