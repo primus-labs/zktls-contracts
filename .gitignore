@@ -13,6 +13,8 @@ artifacts
 cache_hardhat
 
 .env
+scripts/.env.verify.mainnet
+scripts/.env.verify.testnet
 zkout
 out
 foundryup-zksync
