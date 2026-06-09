@@ -37,6 +37,14 @@ library PrimusZKTLSTimelockOps {
     }
 }
 
+contract PrimusZKTLSProxyAdminResolver is Script {
+    bytes32 internal constant ERC1967_ADMIN_SLOT = 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103;
+
+    function _proxyAdmin(address proxy) internal view returns (address) {
+        return address(uint160(uint256(vm.load(proxy, ERC1967_ADMIN_SLOT))));
+    }
+}
+
 contract ScheduleSetAttestorPrimusZKTLS is Script {
     function run() external {
         uint256 privateKey = vm.envUint("PRIVATE_KEY");
@@ -123,12 +131,12 @@ contract ExecuteRemoveAttestorPrimusZKTLS is Script {
     }
 }
 
-contract ScheduleUpgradePrimusZKTLS is Script {
+contract ScheduleUpgradePrimusZKTLS is PrimusZKTLSProxyAdminResolver {
     function run() external {
         uint256 privateKey = vm.envUint("PRIVATE_KEY");
         TimelockController timelock = TimelockController(payable(vm.envAddress("TIMELOCK_ADDRESS")));
-        address proxyAdmin = vm.envAddress("PROXY_ADMIN_ADDRESS");
         address proxy = vm.envAddress("PROXY_ADDRESS");
+        address proxyAdmin = _proxyAdmin(proxy);
 
         vm.startBroadcast(privateKey);
         PrimusZKTLS newLogic = new PrimusZKTLS();
@@ -148,12 +156,12 @@ contract ScheduleUpgradePrimusZKTLS is Script {
     }
 }
 
-contract ExecuteUpgradePrimusZKTLS is Script {
+contract ExecuteUpgradePrimusZKTLS is PrimusZKTLSProxyAdminResolver {
     function run() external {
         uint256 privateKey = vm.envUint("PRIVATE_KEY");
         TimelockController timelock = TimelockController(payable(vm.envAddress("TIMELOCK_ADDRESS")));
-        address proxyAdmin = vm.envAddress("PROXY_ADMIN_ADDRESS");
         address proxy = vm.envAddress("PROXY_ADDRESS");
+        address proxyAdmin = _proxyAdmin(proxy);
         address newLogic = vm.envAddress("NEW_LOGIC_ADDRESS");
 
         bytes memory data = PrimusZKTLSTimelockOps.upgradeData(proxy, newLogic);

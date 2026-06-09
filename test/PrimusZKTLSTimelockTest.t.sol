@@ -11,6 +11,13 @@ import {
 import {PrimusZKTLS} from "../src/PrimusZKTLS.sol";
 import {Attestor} from "../src/IPrimusZKTLS.sol";
 import {PrimusZKTLSDeploymentLib} from "../script/PrimusZKTLS.s.sol";
+import {PrimusZKTLSProxyAdminResolver} from "../script/TimelockOperations.s.sol";
+
+contract TimelockProxyAdminResolverHarness is PrimusZKTLSProxyAdminResolver {
+    function proxyAdminOf(address proxy) external view returns (address) {
+        return _proxyAdmin(proxy);
+    }
+}
 
 contract PrimusZKTLSTimelockTest is Test {
     bytes32 private constant ERC1967_ADMIN_SLOT = 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103;
@@ -107,6 +114,17 @@ contract PrimusZKTLSTimelockTest is Test {
         timelock.execute(address(proxyAdmin), 0, data, predecessor, salt);
 
         assertEq(_implementation(address(proxy)), address(newLogic));
+    }
+
+    function testTimelockOperationsResolveProxyAdminFromProxy() public {
+        PrimusZKTLS logic = new PrimusZKTLS();
+
+        (, TransparentUpgradeableProxy proxy) =
+            PrimusZKTLSDeploymentLib.deploy(address(logic), multisig, MIN_DELAY, _initialAttestors());
+
+        TimelockProxyAdminResolverHarness resolver = new TimelockProxyAdminResolverHarness();
+
+        assertEq(resolver.proxyAdminOf(address(proxy)), _proxyAdmin(address(proxy)));
     }
 
     function _proxyAdmin(address proxy) private view returns (address) {
