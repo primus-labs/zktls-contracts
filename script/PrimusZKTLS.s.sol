@@ -77,3 +77,15 @@ contract DeployPrimusZKTLS is Script {
         return address(uint160(uint256(vm.load(proxy, ERC1967_ADMIN_SLOT))));
     }
 }
+
+contract DeployPrimusZKTLSLogic is Script {
+    function run() external {
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+
+        vm.startBroadcast(deployerPrivateKey);
+        PrimusZKTLS logic = new PrimusZKTLS();
+        vm.stopBroadcast();
+
+        console.log("New Logic Contract Address: ", address(logic));
+    }
+}

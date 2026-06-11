@@ -24,6 +24,18 @@ library PrimusZKTLSTimelockOps {
             abi.encodeCall(ProxyAdmin.upgradeAndCall, (ITransparentUpgradeableProxy(proxy), implementation, bytes("")));
     }
 
+    function scheduleCalldata(address target, bytes memory data, bytes32 salt, uint256 delay)
+        internal
+        pure
+        returns (bytes memory)
+    {
+        return abi.encodeCall(TimelockController.schedule, (target, 0, data, PREDECESSOR, salt, delay));
+    }
+
+    function executeCalldata(address target, bytes memory data, bytes32 salt) internal pure returns (bytes memory) {
+        return abi.encodeCall(TimelockController.execute, (target, 0, data, PREDECESSOR, salt));
+    }
+
     function setAttestorSalt(address proxy, address attestorAddr, string memory url) internal view returns (bytes32) {
         return keccak256(abi.encode("PrimusZKTLS:setAttestor", block.chainid, proxy, attestorAddr, url));
     }
@@ -42,6 +54,129 @@ contract PrimusZKTLSProxyAdminResolver is Script {
 
     function _proxyAdmin(address proxy) internal view returns (address) {
         return address(uint160(uint256(vm.load(proxy, ERC1967_ADMIN_SLOT))));
+    }
+}
+
+contract PrimusZKTLSSafeCalldataPrinter is Script {
+    function _printSafeTransaction(address to, bytes memory data) internal pure {
+        console.log("Safe transaction:");
+        console.log("to:", to);
+        console.log("value:", uint256(0));
+        console.log("data:");
+        console.logBytes(data);
+    }
+}
+
+contract GenerateSafeScheduleSetAttestorCalldata is PrimusZKTLSSafeCalldataPrinter {
+    function run() external view {
+        TimelockController timelock = TimelockController(payable(vm.envAddress("TIMELOCK_ADDRESS")));
+        address proxy = vm.envAddress("PROXY_ADDRESS");
+        address attestorAddr = vm.envAddress("ATTESTOR_ADDRESS");
+        string memory url = vm.envString("ATTESTOR_URL");
+
+        bytes memory operationData = PrimusZKTLSTimelockOps.setAttestorData(attestorAddr, url);
+        bytes32 salt = PrimusZKTLSTimelockOps.setAttestorSalt(proxy, attestorAddr, url);
+        uint256 delay = timelock.getMinDelay();
+        bytes memory safeCalldata = PrimusZKTLSTimelockOps.scheduleCalldata(proxy, operationData, salt, delay);
+
+        _printSafeTransaction(address(timelock), safeCalldata);
+        console.log("Operation: schedule setAttestor");
+        console.log("Target proxy:", proxy);
+        console.log("Attestor:", attestorAddr);
+        console.log("Delay:", delay);
+        console.logBytes32(salt);
+    }
+}
+
+contract GenerateSafeExecuteSetAttestorCalldata is PrimusZKTLSSafeCalldataPrinter {
+    function run() external view {
+        TimelockController timelock = TimelockController(payable(vm.envAddress("TIMELOCK_ADDRESS")));
+        address proxy = vm.envAddress("PROXY_ADDRESS");
+        address attestorAddr = vm.envAddress("ATTESTOR_ADDRESS");
+        string memory url = vm.envString("ATTESTOR_URL");
+
+        bytes memory operationData = PrimusZKTLSTimelockOps.setAttestorData(attestorAddr, url);
+        bytes32 salt = PrimusZKTLSTimelockOps.setAttestorSalt(proxy, attestorAddr, url);
+        bytes memory safeCalldata = PrimusZKTLSTimelockOps.executeCalldata(proxy, operationData, salt);
+
+        _printSafeTransaction(address(timelock), safeCalldata);
+        console.log("Operation: execute setAttestor");
+        console.logBytes32(salt);
+    }
+}
+
+contract GenerateSafeScheduleRemoveAttestorCalldata is PrimusZKTLSSafeCalldataPrinter {
+    function run() external view {
+        TimelockController timelock = TimelockController(payable(vm.envAddress("TIMELOCK_ADDRESS")));
+        address proxy = vm.envAddress("PROXY_ADDRESS");
+        address attestorAddr = vm.envAddress("ATTESTOR_ADDRESS");
+
+        bytes memory operationData = PrimusZKTLSTimelockOps.removeAttestorData(attestorAddr);
+        bytes32 salt = PrimusZKTLSTimelockOps.removeAttestorSalt(proxy, attestorAddr);
+        uint256 delay = timelock.getMinDelay();
+        bytes memory safeCalldata = PrimusZKTLSTimelockOps.scheduleCalldata(proxy, operationData, salt, delay);
+
+        _printSafeTransaction(address(timelock), safeCalldata);
+        console.log("Operation: schedule removeAttestor");
+        console.log("Target proxy:", proxy);
+        console.log("Attestor:", attestorAddr);
+        console.log("Delay:", delay);
+        console.logBytes32(salt);
+    }
+}
+
+contract GenerateSafeExecuteRemoveAttestorCalldata is PrimusZKTLSSafeCalldataPrinter {
+    function run() external view {
+        TimelockController timelock = TimelockController(payable(vm.envAddress("TIMELOCK_ADDRESS")));
+        address proxy = vm.envAddress("PROXY_ADDRESS");
+        address attestorAddr = vm.envAddress("ATTESTOR_ADDRESS");
+
+        bytes memory operationData = PrimusZKTLSTimelockOps.removeAttestorData(attestorAddr);
+        bytes32 salt = PrimusZKTLSTimelockOps.removeAttestorSalt(proxy, attestorAddr);
+        bytes memory safeCalldata = PrimusZKTLSTimelockOps.executeCalldata(proxy, operationData, salt);
+
+        _printSafeTransaction(address(timelock), safeCalldata);
+        console.log("Operation: execute removeAttestor");
+        console.logBytes32(salt);
+    }
+}
+
+contract GenerateSafeScheduleUpgradeCalldata is PrimusZKTLSProxyAdminResolver, PrimusZKTLSSafeCalldataPrinter {
+    function run() external view {
+        TimelockController timelock = TimelockController(payable(vm.envAddress("TIMELOCK_ADDRESS")));
+        address proxy = vm.envAddress("PROXY_ADDRESS");
+        address proxyAdmin = _proxyAdmin(proxy);
+        address newLogic = vm.envAddress("NEW_LOGIC_ADDRESS");
+
+        bytes memory operationData = PrimusZKTLSTimelockOps.upgradeData(proxy, newLogic);
+        bytes32 salt = PrimusZKTLSTimelockOps.upgradeSalt(proxyAdmin, proxy, newLogic);
+        uint256 delay = timelock.getMinDelay();
+        bytes memory safeCalldata = PrimusZKTLSTimelockOps.scheduleCalldata(proxyAdmin, operationData, salt, delay);
+
+        _printSafeTransaction(address(timelock), safeCalldata);
+        console.log("Operation: schedule upgrade");
+        console.log("ProxyAdmin:", proxyAdmin);
+        console.log("Proxy:", proxy);
+        console.log("New logic:", newLogic);
+        console.log("Delay:", delay);
+        console.logBytes32(salt);
+    }
+}
+
+contract GenerateSafeExecuteUpgradeCalldata is PrimusZKTLSProxyAdminResolver, PrimusZKTLSSafeCalldataPrinter {
+    function run() external view {
+        TimelockController timelock = TimelockController(payable(vm.envAddress("TIMELOCK_ADDRESS")));
+        address proxy = vm.envAddress("PROXY_ADDRESS");
+        address proxyAdmin = _proxyAdmin(proxy);
+        address newLogic = vm.envAddress("NEW_LOGIC_ADDRESS");
+
+        bytes memory operationData = PrimusZKTLSTimelockOps.upgradeData(proxy, newLogic);
+        bytes32 salt = PrimusZKTLSTimelockOps.upgradeSalt(proxyAdmin, proxy, newLogic);
+        bytes memory safeCalldata = PrimusZKTLSTimelockOps.executeCalldata(proxyAdmin, operationData, salt);
+
+        _printSafeTransaction(address(timelock), safeCalldata);
+        console.log("Operation: execute upgrade");
+        console.logBytes32(salt);
     }
 }
 

@@ -11,7 +11,7 @@ import {
 import {PrimusZKTLS} from "../src/PrimusZKTLS.sol";
 import {Attestor} from "../src/IPrimusZKTLS.sol";
 import {PrimusZKTLSDeploymentLib} from "../script/PrimusZKTLS.s.sol";
-import {PrimusZKTLSProxyAdminResolver} from "../script/TimelockOperations.s.sol";
+import {PrimusZKTLSTimelockOps, PrimusZKTLSProxyAdminResolver} from "../script/TimelockOperations.s.sol";
 
 contract TimelockProxyAdminResolverHarness is PrimusZKTLSProxyAdminResolver {
     function proxyAdminOf(address proxy) external view returns (address) {
@@ -56,6 +56,43 @@ contract PrimusZKTLSTimelockTest is Test {
 
         (address timelockAttestor,) = zktls._attestorsMapping(address(timelock));
         assertEq(timelockAttestor, address(0));
+    }
+
+    function testTimelockRolesCanMigrateFromEoaToMultisig() public {
+        address eoaAdmin = address(0xE0A);
+        address safeMultisig = address(0x5AFE);
+        address[] memory proposers = new address[](1);
+        proposers[0] = eoaAdmin;
+        address[] memory executors = new address[](1);
+        executors[0] = address(0);
+        TimelockController timelock = new TimelockController(MIN_DELAY, proposers, executors, eoaAdmin);
+
+        vm.startPrank(eoaAdmin);
+        timelock.grantRole(timelock.DEFAULT_ADMIN_ROLE(), safeMultisig);
+        timelock.grantRole(timelock.PROPOSER_ROLE(), safeMultisig);
+        timelock.grantRole(timelock.CANCELLER_ROLE(), safeMultisig);
+        timelock.revokeRole(timelock.PROPOSER_ROLE(), eoaAdmin);
+        timelock.revokeRole(timelock.CANCELLER_ROLE(), eoaAdmin);
+        timelock.revokeRole(timelock.DEFAULT_ADMIN_ROLE(), eoaAdmin);
+        vm.stopPrank();
+
+        assertTrue(timelock.hasRole(timelock.DEFAULT_ADMIN_ROLE(), safeMultisig));
+        assertTrue(timelock.hasRole(timelock.PROPOSER_ROLE(), safeMultisig));
+        assertTrue(timelock.hasRole(timelock.CANCELLER_ROLE(), safeMultisig));
+        assertFalse(timelock.hasRole(timelock.DEFAULT_ADMIN_ROLE(), eoaAdmin));
+        assertFalse(timelock.hasRole(timelock.PROPOSER_ROLE(), eoaAdmin));
+        assertFalse(timelock.hasRole(timelock.CANCELLER_ROLE(), eoaAdmin));
+        assertTrue(timelock.hasRole(timelock.EXECUTOR_ROLE(), address(0)));
+
+        bytes memory data = "";
+        bytes32 salt = keccak256("multisig controls timelock");
+
+        vm.expectRevert();
+        vm.prank(eoaAdmin);
+        timelock.schedule(address(0x1234), 0, data, bytes32(0), salt, MIN_DELAY);
+
+        vm.prank(safeMultisig);
+        timelock.schedule(address(0x1234), 0, data, bytes32(0), salt, MIN_DELAY);
     }
 
     function testAttestorChangesRequireTimelockDelay() public {
@@ -125,6 +162,34 @@ contract PrimusZKTLSTimelockTest is Test {
         TimelockProxyAdminResolverHarness resolver = new TimelockProxyAdminResolverHarness();
 
         assertEq(resolver.proxyAdminOf(address(proxy)), _proxyAdmin(address(proxy)));
+    }
+
+    function testTimelockOperationsEncodeSafeScheduleCalldata() public view {
+        address target = address(0x1234);
+        bytes memory data = abi.encodeCall(PrimusZKTLS.removeAttestor, (attestor));
+        bytes32 salt = keccak256("safe schedule");
+
+        bytes memory safeCalldata = PrimusZKTLSTimelockOps.scheduleCalldata(target, data, salt, MIN_DELAY);
+
+        assertEq(
+            safeCalldata,
+            abi.encodeCall(
+                TimelockController.schedule, (target, 0, data, PrimusZKTLSTimelockOps.PREDECESSOR, salt, MIN_DELAY)
+            )
+        );
+    }
+
+    function testTimelockOperationsEncodeSafeExecuteCalldata() public view {
+        address target = address(0x1234);
+        bytes memory data = abi.encodeCall(PrimusZKTLS.removeAttestor, (attestor));
+        bytes32 salt = keccak256("safe execute");
+
+        bytes memory safeCalldata = PrimusZKTLSTimelockOps.executeCalldata(target, data, salt);
+
+        assertEq(
+            safeCalldata,
+            abi.encodeCall(TimelockController.execute, (target, 0, data, PrimusZKTLSTimelockOps.PREDECESSOR, salt))
+        );
     }
 
     function _proxyAdmin(address proxy) private view returns (address) {
