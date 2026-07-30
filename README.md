@@ -43,6 +43,18 @@ contract AttestorTest {
 
 ```
 
+### Attestation Guard Example
+
+`verifyAttestation` verifies the Primus attestor signature and attestation
+encoding. Applications that act on the proof should still check their own
+business policy before consuming it. `AttestationGuard` is an optional helper
+that wraps `verifyAttestation` with freshness, recipient, request/response
+schema, and replay checks.
+
+```solidity
+import { AttestationGuard } from "@primuslabs/zktls-contracts/src/AttestationGuard.sol";
+```
+
 ## Usage
 
 ### Test
