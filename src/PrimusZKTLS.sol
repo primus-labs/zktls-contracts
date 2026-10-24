@@ -107,6 +107,11 @@ contract PrimusZKTLS is OwnableUpgradeable, IPrimusZKTLS {
             v := byte(0, mload(add(signature, 0x60)))
         }
         require(v == 27 || v == 28, "Invalid signature v value");
+        // ECDSA accepts two equivalent signatures unless s is canonicalized.
+        require(
+            uint256(s) <= 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0,
+            "Invalid signature s value"
+        );
         address attestorAddr = ecrecover(encodeAttestation(attestation), v, r, s);
         uint256 i;
         for (i = 0; i < _attestors.length; i++) {
